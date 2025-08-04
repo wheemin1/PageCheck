@@ -1,0 +1,42 @@
+{
+  "header": {
+    "subtitle": "10秒モバイルフレンドリーチェッカー"
+  },
+  "input": {
+    "urlLabel": "分析するウェブサイトのURL",
+    "urlPlaceholder": "https://example.com",
+    "analyze": "分析する",
+    "device": "デバイスタイプ",
+    "mobile": "モバイル",
+    "desktop": "デスクトップ"
+  },
+  "results": {
+    "overview": "パフォーマンス概要",
+    "overall": "総合スコア",
+    "performance": "パフォーマンス",
+    "accessibility": "アクセシビリティ",
+    "seo": "SEO",
+    "bestPractices": "ベストプラクティス"
+  },
+  "vitals": {
+    "title": "Core Web Vitals"
+  },
+  "improvements": {
+    "title": "改善提案",
+    "excellent": "素晴らしい！",
+    "noIssues": "改善が必要な項目はありません。"
+  },
+  "audits": {
+    "title": "詳細監査結果"
+  },
+  "export": {
+    "title": "結果を共有"
+  },
+  "error": {
+    "title": "エラーが発生しました"
+  },
+  "empty": {
+    "title": "ウェブサイトを分析する",
+    "subtitle": "上の入力フィールドにURLを入力し、分析ボタンをクリックしてください"
+  }
+}

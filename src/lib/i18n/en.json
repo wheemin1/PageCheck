@@ -1,0 +1,42 @@
+{
+  "header": {
+    "subtitle": "10-Second Mobile Friendliness Checker"
+  },
+  "input": {
+    "urlLabel": "Website URL to analyze",
+    "urlPlaceholder": "https://example.com",
+    "analyze": "Analyze",
+    "device": "Device Type",
+    "mobile": "Mobile",
+    "desktop": "Desktop"
+  },
+  "results": {
+    "overview": "Performance Overview",
+    "overall": "Overall Score",
+    "performance": "Performance",
+    "accessibility": "Accessibility",
+    "seo": "SEO",
+    "bestPractices": "Best Practices"
+  },
+  "vitals": {
+    "title": "Core Web Vitals"
+  },
+  "improvements": {
+    "title": "Improvement Opportunities",
+    "excellent": "Excellent!",
+    "noIssues": "No issues found that need improvement."
+  },
+  "audits": {
+    "title": "Detailed Audit Results"
+  },
+  "export": {
+    "title": "Share Results"
+  },
+  "error": {
+    "title": "An error occurred"
+  },
+  "empty": {
+    "title": "Analyze a website",
+    "subtitle": "Enter a URL in the input field above and click the analyze button"
+  }
+}

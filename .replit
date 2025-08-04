@@ -1,0 +1,33 @@
+modules = ["nodejs-20"]
+
+[nix]
+channel = "stable-25_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "MoCheck App"
+
+[[workflows.workflow]]
+name = "MoCheck App"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx vite dev --config vite.config.mjs --port 5001 --host 0.0.0.0"
+waitForPort = 5001
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[[ports]]
+localPort = 5001
+externalPort = 3000

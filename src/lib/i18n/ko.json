@@ -1,0 +1,42 @@
+{
+  "header": {
+    "subtitle": "10초 모바일 친화도 체커"
+  },
+  "input": {
+    "urlLabel": "분석할 웹사이트 URL",
+    "urlPlaceholder": "https://example.com",
+    "analyze": "분석하기",
+    "device": "기기 유형",
+    "mobile": "모바일",
+    "desktop": "데스크톱"
+  },
+  "results": {
+    "overview": "성능 개요",
+    "overall": "종합 점수",
+    "performance": "성능",
+    "accessibility": "접근성",
+    "seo": "SEO",
+    "bestPractices": "모범 사례"
+  },
+  "vitals": {
+    "title": "Core Web Vitals"
+  },
+  "improvements": {
+    "title": "개선 제안 사항",
+    "excellent": "훌륭합니다!",
+    "noIssues": "개선이 필요한 항목이 없습니다."
+  },
+  "audits": {
+    "title": "상세 감사 결과"
+  },
+  "export": {
+    "title": "결과 공유하기"
+  },
+  "error": {
+    "title": "오류가 발생했습니다"
+  },
+  "empty": {
+    "title": "웹사이트를 분석해보세요",
+    "subtitle": "위의 입력 필드에 URL을 입력하고 분석 버튼을 클릭하세요"
+  }
+}
