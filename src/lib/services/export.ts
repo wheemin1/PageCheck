@@ -349,27 +349,86 @@ export async function exportToXLSX(results: PageSpeedResults): Promise<void> {
     }
     
     const summaryWS = XLSX.utils.aoa_to_sheet(summaryData);
+    
+    // 요약 시트 컬럼 너비 설정
+    summaryWS['!cols'] = [
+      { width: 25 }, // 항목명
+      { width: 15 }, // 값
+      { width: 10 }  // 등급
+    ];
+    
     XLSX.utils.book_append_sheet(workbook, summaryWS, '요약');
     
-    // 2. 감사 항목 시트
+    // 2. 감사 항목 시트 (상세)
     if (results.audits && results.audits.length > 0) {
       const auditData = [
-        ['감사 항목 세부사항'],
+        ['MoCheck - 상세 감사 항목 보고서'],
         [''],
-        ['제목', '점수', '값', '설명']
+        ['분석 대상:', results.url],
+        ['분석 시간:', new Date().toLocaleString('ko-KR')],
+        [''],
+        ['제목', '카테고리', '점수', '표시값', '설명'],
+        [''] // 헤더 구분선
       ];
       
+      // 카테고리별로 그룹화
+      const auditsByCategory: { [key: string]: any[] } = {
+        'performance': [],
+        'accessibility': [], 
+        'seo': [],
+        'best-practices': []
+      };
+      
       results.audits.forEach(audit => {
-        auditData.push([
-          audit.title,
-          audit.score !== null ? Math.round(audit.score * 100).toString() : 'N/A',
-          audit.displayValue || 'N/A',
-          audit.description
-        ]);
+        const category = audit.id.includes('seo') ? 'seo' :
+                        audit.id.includes('accessibility') ? 'accessibility' :
+                        audit.id.includes('best-practices') ? 'best-practices' : 'performance';
+        auditsByCategory[category].push(audit);
+      });
+      
+      // 카테고리별로 정렬하여 추가
+      const categoryNames: { [key: string]: string } = {
+        'performance': '🚀 성능 (Performance)',
+        'accessibility': '♿ 접근성 (Accessibility)', 
+        'seo': '🔍 SEO',
+        'best-practices': '✅ 모범 사례 (Best Practices)'
+      };
+      
+      Object.entries(auditsByCategory).forEach(([category, audits]) => {
+        if (audits.length > 0) {
+          auditData.push([categoryNames[category]], ['']); // 카테고리 헤더
+          
+          audits.forEach((audit: any) => {
+            const scoreText = audit.score !== null ? 
+              `${Math.round(audit.score * 100)}점` : 'N/A';
+            const statusEmoji = audit.score !== null ?
+              (audit.score >= 0.9 ? '✅' : audit.score >= 0.5 ? '⚠️' : '❌') : '➖';
+              
+            auditData.push([
+              `${statusEmoji} ${audit.title}`,
+              categoryNames[category].replace(/🚀|♿|🔍|✅/g, '').trim(),
+              scoreText,
+              audit.displayValue || 'N/A',
+              audit.description
+            ]);
+          });
+          
+          auditData.push(['']); // 카테고리 구분선
+        }
       });
       
       const auditWS = XLSX.utils.aoa_to_sheet(auditData);
-      XLSX.utils.book_append_sheet(workbook, auditWS, '감사항목');
+      
+      // 컬럼 너비 설정
+      auditWS['!cols'] = [
+        { width: 40 }, // 제목
+        { width: 15 }, // 카테고리
+        { width: 10 }, // 점수
+        { width: 15 }, // 표시값
+        { width: 60 }  // 설명
+      ];
+      
+      XLSX.utils.book_append_sheet(workbook, auditWS, '상세감사항목');
     }
     
     // 파일 다운로드
