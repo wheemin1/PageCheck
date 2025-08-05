@@ -4,13 +4,17 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   plugins: [sveltekit()],
   server: {
-    port: 5000,
+    port: 5003,
     host: '0.0.0.0',
     allowedHosts: 'all'
   },
   preview: {
-    port: 5000,
+    port: 5003,
     host: '0.0.0.0',
     allowedHosts: 'all'
+  },
+  optimizeDeps: {
+    include: ['html-to-image', 'pdf-lib'],
+    force: true
   }
 });

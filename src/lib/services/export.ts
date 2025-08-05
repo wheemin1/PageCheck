@@ -28,13 +28,19 @@ export async function exportToPNG(): Promise<void> {
 
 export async function exportToPDF(results: PageSpeedResults): Promise<void> {
   try {
+    console.log('Starting PDF export with results:', results);
+    
     const pdfDoc = await PDFDocument.create();
+    console.log('PDF document created');
+    
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+    console.log('Fonts embedded');
     
     // Page 1: Overview
     const page1 = pdfDoc.addPage([595, 842]); // A4 size
     const { width, height } = page1.getSize();
+    console.log('Page 1 created with dimensions:', { width, height });
     
     // Header
     page1.drawText('MoCheck - 성능 분석 보고서', {
@@ -118,6 +124,8 @@ export async function exportToPDF(results: PageSpeedResults): Promise<void> {
       yPos -= 25;
     });
     
+    console.log('Page 1 content added');
+    
     // Page 2: Detailed Audits
     const page2 = pdfDoc.addPage([595, 842]);
     page2.drawText('상세 감사 결과', {
@@ -166,7 +174,10 @@ export async function exportToPDF(results: PageSpeedResults): Promise<void> {
       yPos -= 10;
     });
     
+    console.log('Page 2 content added');
+    
     const pdfBytes = await pdfDoc.save();
+    console.log('PDF bytes generated, size:', pdfBytes.length);
     
     // Create download
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
@@ -174,9 +185,12 @@ export async function exportToPDF(results: PageSpeedResults): Promise<void> {
     const link = document.createElement('a');
     link.download = `mocheck-results-${Date.now()}.pdf`;
     link.href = url;
+    
+    console.log('Triggering PDF download:', link.download);
     link.click();
     
     URL.revokeObjectURL(url);
+    console.log('PDF export completed successfully');
   } catch (error) {
     console.error('PDF export failed:', error);
     throw new Error('PDF 내보내기에 실패했습니다.');
@@ -198,4 +212,98 @@ function getCategoryDisplayName(category: string): string {
     other: '기타'
   };
   return names[category] || category;
+}
+
+export async function exportToCSV(results: PageSpeedResults): Promise<void> {
+  try {
+    console.log('Starting CSV export with results:', results);
+    
+    const csvData = [
+      // Headers
+      ['URL', 'Overall Score', 'Performance', 'Accessibility', 'SEO', 'Best Practices', 'LCP', 'FID', 'CLS', 'Timestamp'],
+      // Data
+      [
+        results.url,
+        results.overallScore.toString(),
+        results.scores.performance.toString(),
+        results.scores.accessibility.toString(),
+        results.scores.seo.toString(),
+        results.scores.bestPractices.toString(),
+        results.coreWebVitals.lcp.displayValue,
+        results.coreWebVitals.fid.displayValue,
+        results.coreWebVitals.cls.displayValue,
+        new Date().toISOString()
+      ]
+    ];
+
+    console.log('CSV data prepared:', csvData);
+
+    // Add audit details
+    csvData.push([]);
+    csvData.push(['Audit Details']);
+    csvData.push(['Title', 'Score', 'Category', 'Display Value', 'Description']);
+    
+    results.audits.forEach(audit => {
+      csvData.push([
+        audit.title,
+        audit.score?.toString() || 'N/A',
+        audit.category || 'other',
+        audit.displayValue || '',
+        audit.description
+      ]);
+    });
+
+    const csvContent = csvData.map(row => 
+      row.map(cell => `"${cell.toString().replace(/"/g, '""')}"`).join(',')
+    ).join('\n');
+
+    console.log('CSV content length:', csvContent.length);
+
+    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.download = `mocheck-results-${Date.now()}.csv`;
+    link.href = url;
+    
+    console.log('Triggering download for:', link.download);
+    link.click();
+    
+    URL.revokeObjectURL(url);
+    console.log('CSV export completed successfully');
+  } catch (error) {
+    console.error('CSV export failed:', error);
+    throw new Error('CSV 내보내기에 실패했습니다.');
+  }
+}
+
+export async function exportToJSON(results: PageSpeedResults): Promise<void> {
+  try {
+    console.log('Starting JSON export with results:', results);
+    
+    const jsonData = {
+      ...results,
+      exportedAt: new Date().toISOString(),
+      version: '1.0'
+    };
+
+    console.log('JSON data prepared:', jsonData);
+
+    const jsonString = JSON.stringify(jsonData, null, 2);
+    console.log('JSON string length:', jsonString.length);
+    
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.download = `mocheck-results-${Date.now()}.json`;
+    link.href = url;
+    
+    console.log('Triggering download for:', link.download);
+    link.click();
+    
+    URL.revokeObjectURL(url);
+    console.log('JSON export completed successfully');
+  } catch (error) {
+    console.error('JSON export failed:', error);
+    throw new Error('JSON 내보내기에 실패했습니다.');
+  }
 }

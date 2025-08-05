@@ -127,14 +127,14 @@
           <ImprovementCards improvements={results.improvements} />
         </div>
 
-        <!-- Detailed Audit Results -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <AuditTable audits={results.audits} />
-        </div>
-
         <!-- Export Buttons -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <ExportButtons />
+        </div>
+
+        <!-- Detailed Audit Results -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <AuditTable audits={results.audits} />
         </div>
       </div>
     {/if}

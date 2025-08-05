@@ -30,7 +30,15 @@ export async function analyzeUrl(url: string, strategy: 'mobile' | 'desktop' = '
     }
 
     const data: PageSpeedResponse = await response.json();
+    console.log('Raw API Response:', {
+      performanceScore: data.lighthouseResult.categories.performance?.score,
+      accessibilityScore: data.lighthouseResult.categories.accessibility?.score,
+      seoScore: data.lighthouseResult.categories.seo?.score,
+      bestPracticesScore: data.lighthouseResult.categories['best-practices']?.score
+    });
+    
     const results = processPageSpeedData(data);
+    console.log('Processed Results:', results.scores);
     
     // Cache results
     setToCache(cacheKey, results);
@@ -68,9 +76,9 @@ function processPageSpeedData(data: PageSpeedResponse): PageSpeedResults {
       score: audits['largest-contentful-paint']?.score || 0
     },
     fid: {
-      value: audits['max-potential-fid']?.numericValue || 0,
-      displayValue: audits['max-potential-fid']?.displayValue || 'N/A',
-      score: audits['max-potential-fid']?.score || 0
+      value: audits['interaction-to-next-paint']?.numericValue || audits['max-potential-fid']?.numericValue || audits['total-blocking-time']?.numericValue || 0,
+      displayValue: audits['interaction-to-next-paint']?.displayValue || audits['max-potential-fid']?.displayValue || audits['total-blocking-time']?.displayValue || 'N/A',
+      score: audits['interaction-to-next-paint']?.score || audits['max-potential-fid']?.score || audits['total-blocking-time']?.score || 0
     },
     cls: {
       value: audits['cumulative-layout-shift']?.numericValue || 0,

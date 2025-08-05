@@ -163,22 +163,22 @@
     <table class="min-w-full divide-y divide-gray-200">
       <thead class="bg-gray-50 sticky top-0">
         <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/3">
             감사 항목
           </th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
             카테고리
           </th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">
             상태
           </th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-16">
             점수
           </th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">
             값
           </th>
-          <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-20">
             상세
           </th>
         </tr>
@@ -186,27 +186,31 @@
       <tbody class="bg-white divide-y divide-gray-200">
         {#each filteredAudits as audit (audit.id)}
           <tr class="hover:bg-gray-50">
-            <td class="px-6 py-4">
-              <div class="text-sm font-medium text-gray-900">{audit.title}</div>
+            <td class="px-6 py-4 max-w-0">
+              <div class="text-sm font-medium text-gray-900 word-break break-words overflow-wrap break-word">
+                {audit.title}
+              </div>
             </td>
-            <td class="px-6 py-4 text-sm text-gray-500">
+            <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
               {getCategoryDisplayName(audit.category)}
             </td>
             <td class="px-6 py-4">
-              <span class="inline-flex px-2 py-1 text-xs font-medium border rounded-full {getStatusInfo(audit).class}">
+              <span class="inline-flex px-2 py-1 text-xs font-medium border rounded-full {getStatusInfo(audit).class} whitespace-nowrap">
                 {getStatusInfo(audit).label}
               </span>
             </td>
-            <td class="px-6 py-4 text-sm text-gray-900">
+            <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
               {audit.score !== null ? Math.round(audit.score * 100) : 'N/A'}
             </td>
-            <td class="px-6 py-4 text-sm text-gray-500">
-              {audit.displayValue || '-'}
+            <td class="px-6 py-4 text-sm text-gray-500 max-w-0">
+              <div class="word-break break-words overflow-wrap break-word">
+                {audit.displayValue || '-'}
+              </div>
             </td>
             <td class="px-6 py-4 text-center">
               <button
                 on:click={() => toggleRow(audit.id)}
-                class="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                class="text-blue-600 hover:text-blue-800 text-sm font-medium whitespace-nowrap"
               >
                 {expandedRows.has(audit.id) ? '접기' : '펼치기'}
               </button>
@@ -219,13 +223,15 @@
                 <div class="space-y-3">
                   <div>
                     <h4 class="text-sm font-medium text-gray-900 mb-1">설명</h4>
-                    <p class="text-sm text-gray-600">{audit.description}</p>
+                    <p class="text-sm text-gray-600 word-break break-words overflow-wrap break-word leading-relaxed">
+                      {audit.description}
+                    </p>
                   </div>
                   
                   {#if audit.details}
                     <div>
                       <h4 class="text-sm font-medium text-gray-900 mb-1">세부 정보</h4>
-                      <pre class="text-xs bg-white border rounded p-3 overflow-x-auto max-h-40">
+                      <pre class="text-xs bg-white border rounded p-3 overflow-x-auto max-h-40 word-break break-all">
                         {JSON.stringify(audit.details, null, 2)}
                       </pre>
                     </div>

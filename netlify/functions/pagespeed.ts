@@ -75,10 +75,17 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
     apiUrl.searchParams.set('url', url);
     apiUrl.searchParams.set('key', API_KEY);
     apiUrl.searchParams.set('strategy', strategy);
-    apiUrl.searchParams.set('category', 'performance');
-    apiUrl.searchParams.set('category', 'accessibility');
-    apiUrl.searchParams.set('category', 'best-practices');
-    apiUrl.searchParams.set('category', 'seo');
+    
+    // Add categories using append() to include multiple values
+    apiUrl.searchParams.append('category', 'performance');
+    apiUrl.searchParams.append('category', 'accessibility');
+    apiUrl.searchParams.append('category', 'best-practices');
+    apiUrl.searchParams.append('category', 'seo');
+    
+    // Add locale for consistent results
+    apiUrl.searchParams.set('locale', 'ko');
+    
+    console.log('API URL:', apiUrl.toString());
 
     console.log('Calling PageSpeed Insights API for:', url, 'with strategy:', strategy);
 
@@ -86,7 +93,9 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
     const response = await fetch(apiUrl.toString(), {
       method: 'GET',
       headers: {
-        'User-Agent': 'MoCheck/1.0'
+        'User-Agent': 'Mozilla/5.0 (compatible; PageSpeed Analysis Tool)',
+        'Accept': 'application/json',
+        'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8'
       }
     });
 
@@ -116,6 +125,7 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
 
     // Basic validation of the response
     if (!data.lighthouseResult || !data.lighthouseResult.categories) {
+      console.error('Invalid PageSpeed API response structure:', data);
       return {
         statusCode: 500,
         headers,

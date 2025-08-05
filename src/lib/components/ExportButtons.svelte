@@ -1,12 +1,14 @@
 <script lang="ts">
   import { appStore } from '../stores/app';
   import { t } from '../stores/i18n';
-  import { exportToPNG, exportToPDF } from '../services/export';
+  import { exportToPNG, exportToPDF, exportToCSV, exportToJSON } from '../services/export';
   import { shareToKakao } from '../services/kakao';
 
   let loading = {
     png: false,
     pdf: false,
+    csv: false,
+    json: false,
     kakao: false
   };
 
@@ -48,12 +50,94 @@
       loading.kakao = false;
     }
   }
+
+  async function handleCSVExport() {
+    const results = $appStore.results;
+    console.log('CSV export clicked, results:', results);
+    
+    if (!results) {
+      console.error('No results available for CSV export');
+      alert('분석 결과가 없습니다. 먼저 URL을 분석해주세요.');
+      return;
+    }
+
+    try {
+      loading.csv = true;
+      console.log('Starting CSV export...');
+      await exportToCSV(results);
+      console.log('CSV export completed');
+    } catch (error) {
+      console.error('CSV export error:', error);
+      alert(error instanceof Error ? error.message : 'CSV 내보내기에 실패했습니다.');
+    } finally {
+      loading.csv = false;
+    }
+  }
+
+  async function handleJSONExport() {
+    const results = $appStore.results;
+    console.log('JSON export clicked, results:', results);
+    
+    if (!results) {
+      console.error('No results available for JSON export');
+      alert('분석 결과가 없습니다. 먼저 URL을 분석해주세요.');
+      return;
+    }
+
+    try {
+      loading.json = true;
+      console.log('Starting JSON export...');
+      await exportToJSON(results);
+      console.log('JSON export completed');
+    } catch (error) {
+      console.error('JSON export error:', error);
+      alert(error instanceof Error ? error.message : 'JSON 내보내기에 실패했습니다.');
+    } finally {
+      loading.json = false;
+    }
+  }
 </script>
 
 <div>
   <h2 class="text-xl font-semibold text-gray-900 mb-6">{$t('export.title')}</h2>
   
-  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+    <!-- CSV Export -->
+    <button
+      on:click={handleCSVExport}
+      disabled={loading.csv}
+      class="flex items-center justify-center px-4 py-3 border border-green-300 rounded-lg text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+    >
+      {#if loading.csv}
+        <svg class="animate-spin w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+      {:else}
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      {/if}
+      CSV 다운로드
+    </button>
+
+    <!-- JSON Export -->
+    <button
+      on:click={handleJSONExport}
+      disabled={loading.json}
+      class="flex items-center justify-center px-4 py-3 border border-blue-300 rounded-lg text-sm font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+    >
+      {#if loading.json}
+        <svg class="animate-spin w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+      {:else}
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+        </svg>
+      {/if}
+      JSON 다운로드
+    </button>
+
     <!-- PNG Export -->
     <button
       on:click={handlePNGExport}

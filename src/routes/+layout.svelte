@@ -1,8 +1,8 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>
+  import '../app.css';
+</script>
+
+<svelte:head>
   <title>MoCheck - 10초 모바일 친화도 체커</title>
   <meta name="description" content="Google PageSpeed Insights를 활용한 웹사이트 성능 분석 도구. 모바일 친화도, 접근성, SEO 점수를 10초 만에 확인하세요." />
   
@@ -28,11 +28,9 @@
           crossorigin="anonymous"></script>
   
   <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-  <slot />
-</body>
-</html>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+</svelte:head>
+
+<slot />
