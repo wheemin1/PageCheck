@@ -360,43 +360,54 @@ export async function exportToXLSX(results: PageSpeedResults): Promise<void> {
     XLSX.utils.book_append_sheet(workbook, summaryWS, '요약');
     
     // 2. 감사 항목 시트 (상세)
+    console.log('XLSX Export - Audits data:', results.audits?.length, results.audits?.slice(0, 3));
+    
     if (results.audits && results.audits.length > 0) {
       const auditData = [
         ['MoCheck - 상세 감사 항목 보고서'],
         [''],
         ['분석 대상:', results.url],
         ['분석 시간:', new Date().toLocaleString('ko-KR')],
+        ['총 감사 항목 수:', `${results.audits.length}개`],
         [''],
         ['제목', '카테고리', '점수', '표시값', '설명'],
         [''] // 헤더 구분선
       ];
       
-      // 카테고리별로 그룹화
+      // 카테고리별로 그룹화 (실제 category 필드 사용)
       const auditsByCategory: { [key: string]: any[] } = {
         'performance': [],
         'accessibility': [], 
         'seo': [],
-        'best-practices': []
+        'best-practices': [],
+        'other': []
       };
       
       results.audits.forEach(audit => {
-        const category = audit.id.includes('seo') ? 'seo' :
-                        audit.id.includes('accessibility') ? 'accessibility' :
-                        audit.id.includes('best-practices') ? 'best-practices' : 'performance';
+        const category = audit.category || 'other';
+        if (!auditsByCategory[category]) {
+          auditsByCategory[category] = [];
+        }
         auditsByCategory[category].push(audit);
       });
+      
+      console.log('XLSX Export - Categories:', Object.keys(auditsByCategory).map(cat => `${cat}: ${auditsByCategory[cat].length}`));
       
       // 카테고리별로 정렬하여 추가
       const categoryNames: { [key: string]: string } = {
         'performance': '🚀 성능 (Performance)',
         'accessibility': '♿ 접근성 (Accessibility)', 
         'seo': '🔍 SEO',
-        'best-practices': '✅ 모범 사례 (Best Practices)'
+        'best-practices': '✅ 모범 사례 (Best Practices)',
+        'other': '🔧 기타 (Other)'
       };
       
       Object.entries(auditsByCategory).forEach(([category, audits]) => {
         if (audits.length > 0) {
-          auditData.push([categoryNames[category]], ['']); // 카테고리 헤더
+          const categoryDisplayName = categoryNames[category] || `📋 ${category}`;
+          auditData.push([categoryDisplayName], ['']); // 카테고리 헤더
+          
+          console.log(`XLSX Export - Processing category ${category} with ${audits.length} audits`);
           
           audits.forEach((audit: any) => {
             const scoreText = audit.score !== null ? 
@@ -406,10 +417,10 @@ export async function exportToXLSX(results: PageSpeedResults): Promise<void> {
               
             auditData.push([
               `${statusEmoji} ${audit.title}`,
-              categoryNames[category].replace(/🚀|♿|🔍|✅/g, '').trim(),
+              categoryDisplayName.replace(/🚀|♿|🔍|✅|🔧/g, '').trim(),
               scoreText,
               audit.displayValue || 'N/A',
-              audit.description
+              audit.description || '설명 없음'
             ]);
           });
           
@@ -429,6 +440,26 @@ export async function exportToXLSX(results: PageSpeedResults): Promise<void> {
       ];
       
       XLSX.utils.book_append_sheet(workbook, auditWS, '상세감사항목');
+    } else {
+      // audits 데이터가 없는 경우 기본 정보 시트 생성
+      console.log('XLSX Export - No audits data, creating basic info sheet');
+      const basicData = [
+        ['감사 항목 정보 없음'],
+        [''],
+        ['분석 대상:', results.url],
+        ['분석 시간:', new Date().toLocaleString('ko-KR')],
+        [''],
+        ['기본 점수 정보'],
+        ['성능:', `${results.scores.performance}점`],
+        ['접근성:', `${results.scores.accessibility}점`],
+        ['SEO:', `${results.scores.seo}점`],
+        ['모범 사례:', `${results.scores.bestPractices}점`],
+        [''],
+        ['참고: 상세 감사 항목은 분석 과정에서 누락되었습니다.']
+      ];
+      
+      const basicWS = XLSX.utils.aoa_to_sheet(basicData);
+      XLSX.utils.book_append_sheet(workbook, basicWS, '기본정보');
     }
     
     // 파일 다운로드
