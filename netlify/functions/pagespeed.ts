@@ -89,15 +89,40 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
 
     console.log('Calling PageSpeed Insights API for:', url, 'with strategy:', strategy);
 
-    // Call PageSpeed Insights API
-    const response = await fetch(apiUrl.toString(), {
-      method: 'GET',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; PageSpeed Analysis Tool)',
-        'Accept': 'application/json',
-        'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8'
+    // Call PageSpeed Insights API with timeout handling
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 90000); // 90초 타임아웃
+
+    let response;
+    try {
+      response = await fetch(apiUrl.toString(), {
+        method: 'GET',
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (compatible; PageSpeed Analysis Tool)',
+          'Accept': 'application/json',
+          'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8'
+        },
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      
+      if (fetchError instanceof Error && fetchError.name === 'AbortError') {
+        console.error('PageSpeed API timeout for URL:', url);
+        return {
+          statusCode: 504,
+          headers,
+          body: JSON.stringify({ 
+            error: '페이지 분석 시간이 초과되었습니다. 네이버와 같은 복잡한 사이트는 분석에 시간이 오래 걸릴 수 있습니다.',
+            details: 'Request timeout after 90 seconds'
+          })
+        };
       }
-    });
+      
+      throw fetchError; // Re-throw other errors
+    }
 
     if (!response.ok) {
       const errorText = await response.text();

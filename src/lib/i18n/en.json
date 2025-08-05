@@ -60,6 +60,12 @@
     "kakaoError": "Failed to share to KakaoTalk.",
     "noResults": "No results available. Please analyze a URL first."
   },
+  "tips": {
+    "title": "💡 Analysis Tips",
+    "largeWebsites": "Large websites like Naver and Daum may take longer to analyze (up to 90 seconds)",
+    "mobileVersion": "For complex sites, try the mobile version (e.g., m.naver.com)",
+    "timeout": "If timeout occurs, refresh the page and try again"
+  },
   "error": {
     "title": "An error occurred",
     "invalidUrl": "Please enter a valid URL."
