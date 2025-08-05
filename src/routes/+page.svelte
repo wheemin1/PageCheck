@@ -97,22 +97,18 @@
             <ScoreGauge 
               score={results.scores.performance}
               label={$t('results.performance')}
-              category="performance"
             />
             <ScoreGauge 
               score={results.scores.accessibility}
               label={$t('results.accessibility')}
-              category="accessibility"
             />
             <ScoreGauge 
               score={results.scores.seo}
               label={$t('results.seo')}
-              category="seo"
             />
             <ScoreGauge 
               score={results.scores.bestPractices}
               label={$t('results.bestPractices')}
-              category="best-practices"
             />
           </div>
         </div>

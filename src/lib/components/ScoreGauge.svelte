@@ -5,7 +5,6 @@
 
   export let score: number;
   export let label: string;
-  export let category: string = '';
   export let isOverall: boolean = false;
 
   const animatedScore = tweened(0, {
