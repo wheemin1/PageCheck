@@ -16,7 +16,7 @@
       new URL(formattedUrl); // Validate URL
       await analyzeUrl(formattedUrl, strategy);
     } catch (error) {
-      appStore.setError('올바른 URL을 입력해주세요.');
+      appStore.setError($t('error.invalidUrl'));
     }
   }
 

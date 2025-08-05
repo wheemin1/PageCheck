@@ -17,7 +17,7 @@
       loading.png = true;
       await exportToPNG();
     } catch (error) {
-      alert(error instanceof Error ? error.message : 'PNG 내보내기에 실패했습니다.');
+      alert(error instanceof Error ? error.message : $t('export.pngError'));
     } finally {
       loading.png = false;
     }
@@ -31,7 +31,7 @@
       loading.pdf = true;
       await exportToPDF(results);
     } catch (error) {
-      alert(error instanceof Error ? error.message : 'PDF 내보내기에 실패했습니다.');
+      alert(error instanceof Error ? error.message : $t('export.pdfError'));
     } finally {
       loading.pdf = false;
     }
@@ -45,7 +45,7 @@
       loading.kakao = true;
       await shareToKakao(results.url, results.overallScore);
     } catch (error) {
-      alert(error instanceof Error ? error.message : '카카오톡 공유에 실패했습니다.');
+      alert(error instanceof Error ? error.message : $t('export.kakaoError'));
     } finally {
       loading.kakao = false;
     }
@@ -57,7 +57,7 @@
     
     if (!results) {
       console.error('No results available for CSV export');
-      alert('분석 결과가 없습니다. 먼저 URL을 분석해주세요.');
+      alert($t('export.noResults'));
       return;
     }
 
@@ -68,7 +68,7 @@
       console.log('CSV export completed');
     } catch (error) {
       console.error('CSV export error:', error);
-      alert(error instanceof Error ? error.message : 'CSV 내보내기에 실패했습니다.');
+      alert(error instanceof Error ? error.message : $t('export.csvError'));
     } finally {
       loading.csv = false;
     }
@@ -80,7 +80,7 @@
     
     if (!results) {
       console.error('No results available for JSON export');
-      alert('분석 결과가 없습니다. 먼저 URL을 분석해주세요.');
+      alert($t('export.noResults'));
       return;
     }
 
@@ -91,7 +91,7 @@
       console.log('JSON export completed');
     } catch (error) {
       console.error('JSON export error:', error);
-      alert(error instanceof Error ? error.message : 'JSON 내보내기에 실패했습니다.');
+      alert(error instanceof Error ? error.message : $t('export.jsonError'));
     } finally {
       loading.json = false;
     }
@@ -117,7 +117,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
       {/if}
-      CSV 다운로드
+      {$t('export.csv')}
     </button>
 
     <!-- JSON Export -->
@@ -135,7 +135,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
         </svg>
       {/if}
-      JSON 다운로드
+      {$t('export.json')}
     </button>
 
     <!-- PNG Export -->
@@ -153,7 +153,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
       {/if}
-      PNG 다운로드
+      {$t('export.png')}
     </button>
 
     <!-- PDF Export -->
@@ -171,7 +171,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
         </svg>
       {/if}
-      PDF 다운로드
+      {$t('export.pdf')}
     </button>
 
     <!-- Kakao Share -->
@@ -189,7 +189,7 @@
           <path d="M12 3c5.799 0 10.5 3.664 10.5 8.185 0 4.52-4.701 8.184-10.5 8.184a13.5 13.5 0 01-1.727-.11l-4.408 2.883c-.501.265-.678.236-.472-.413l.892-3.678c-2.88-1.46-4.785-3.99-4.785-6.866C1.5 6.665 6.201 3 12 3z"/>
         </svg>
       {/if}
-      카카오톡 공유
+      {$t('export.kakao')}
     </button>
   </div>
 </div>

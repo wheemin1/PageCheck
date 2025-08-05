@@ -2,6 +2,23 @@
   "header": {
     "subtitle": "10秒モバイルフレンドリーチェッカー"
   },
+  "trust": {
+    "poweredBy": "Powered by Google",
+    "officialApi": "公式Google PageSpeed Insights API",
+    "lighthouseEngine": "Lighthouseエンジン",
+    "description": "を使用して正確な分析を提供します",
+    "realData": "実際のGoogleデータ",
+    "chromeUxReport": "Chrome UXレポートベース",
+    "lighthouseVersion": "Lighthouse v11エンジン",
+    "officialData": "Google公式データ",
+    "officialApiUse": "Google公式API使用",
+    "realtimeLighthouse": "リアルタイムLighthouse分析",
+    "chromeUxBased": "Chrome UXレポートベース",
+    "techStack": "技術スタック:",
+    "techDescription": "Google PageSpeed Insights API v5 • Lighthouse v11 • Chrome User Experience Report • Real User Monitoring (RUM) データ",
+    "copyright": "© 2025 MoCheck. Made with ❤️ using Google's official web performance tools",
+    "disclaimer": "このツールは、GoogleのオフィシャルPageSpeed Insights APIと同じエンジンを使用してウェブサイトのパフォーマンスを正確に測定します"
+  },
   "input": {
     "urlLabel": "分析するウェブサイトのURL",
     "urlPlaceholder": "https://example.com",
@@ -27,13 +44,25 @@
     "noIssues": "改善が必要な項目はありません。"
   },
   "audits": {
-    "title": "詳細監査結果"
+    "title": "詳細検査結果"
   },
   "export": {
-    "title": "結果を共有"
+    "title": "結果を共有",
+    "png": "PNGで保存",
+    "pdf": "PDFで保存",
+    "csv": "CSVでエクスポート",
+    "json": "JSONでエクスポート",
+    "kakao": "カカオトーク共有",
+    "pngError": "PNG エクスポートに失敗しました。",
+    "pdfError": "PDF エクスポートに失敗しました。",
+    "csvError": "CSV エクスポートに失敗しました。",
+    "jsonError": "JSON エクスポートに失敗しました。",
+    "kakaoError": "カカオトーク共有に失敗しました。",
+    "noResults": "分析結果がありません。まずURLを分析してください。"
   },
   "error": {
-    "title": "エラーが発生しました"
+    "title": "エラーが発生しました",
+    "invalidUrl": "正しいURLを入力してください。"
   },
   "empty": {
     "title": "ウェブサイトを分析する",

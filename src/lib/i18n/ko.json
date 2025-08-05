@@ -2,6 +2,23 @@
   "header": {
     "subtitle": "10초 모바일 친화도 체커"
   },
+  "trust": {
+    "poweredBy": "Powered by Google",
+    "officialApi": "공식 Google PageSpeed Insights API",
+    "lighthouseEngine": "Lighthouse 엔진",
+    "description": "을 사용하여 정확한 분석을 제공합니다",
+    "realData": "실제 Google 데이터",
+    "chromeUxReport": "Chrome UX Report 기반",
+    "lighthouseVersion": "Lighthouse v11 엔진",
+    "officialData": "Google 공식 데이터",
+    "officialApiUse": "Google 공식 API 사용",
+    "realtimeLighthouse": "실시간 Lighthouse 분석",
+    "chromeUxBased": "Chrome UX Report 기반",
+    "techStack": "기술 스택:",
+    "techDescription": "Google PageSpeed Insights API v5 • Lighthouse v11 • Chrome User Experience Report • Real User Monitoring (RUM) 데이터",
+    "copyright": "© 2025 MoCheck. Made with ❤️ using Google's official web performance tools",
+    "disclaimer": "이 도구는 Google의 공식 PageSpeed Insights API와 동일한 엔진을 사용하여 웹사이트 성능을 정확하게 측정합니다"
+  },
   "input": {
     "urlLabel": "분석할 웹사이트 URL",
     "urlPlaceholder": "https://example.com",
@@ -27,13 +44,25 @@
     "noIssues": "개선이 필요한 항목이 없습니다."
   },
   "audits": {
-    "title": "상세 감사 결과"
+    "title": "상세 검사 결과"
   },
   "export": {
-    "title": "결과 공유하기"
+    "title": "결과 공유하기",
+    "png": "PNG로 저장",
+    "pdf": "PDF로 저장", 
+    "csv": "CSV로 내보내기",
+    "json": "JSON으로 내보내기",
+    "kakao": "카카오톡 공유",
+    "pngError": "PNG 내보내기에 실패했습니다.",
+    "pdfError": "PDF 내보내기에 실패했습니다.",
+    "csvError": "CSV 내보내기에 실패했습니다.",
+    "jsonError": "JSON 내보내기에 실패했습니다.",
+    "kakaoError": "카카오톡 공유에 실패했습니다.",
+    "noResults": "분석 결과가 없습니다. 먼저 URL을 분석해주세요."
   },
   "error": {
-    "title": "오류가 발생했습니다"
+    "title": "오류가 발생했습니다",
+    "invalidUrl": "올바른 URL을 입력해주세요."
   },
   "empty": {
     "title": "웹사이트를 분석해보세요",

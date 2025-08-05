@@ -185,7 +185,7 @@
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
         {#each filteredAudits as audit (audit.id)}
-          <tr class="hover:bg-gray-50">
+          <tr class="hover:bg-gray-50 {expandedRows.has(audit.id) ? 'bg-blue-50 border-l-4 border-blue-400' : ''}">
             <td class="px-6 py-4 max-w-0">
               <div class="text-sm font-medium text-gray-900 word-break break-words overflow-wrap break-word">
                 {audit.title}
@@ -210,7 +210,7 @@
             <td class="px-6 py-4 text-center">
               <button
                 on:click={() => toggleRow(audit.id)}
-                class="text-blue-600 hover:text-blue-800 text-sm font-medium whitespace-nowrap"
+                class="text-blue-600 hover:text-blue-800 text-sm font-medium whitespace-nowrap transition-colors duration-200 {expandedRows.has(audit.id) ? 'bg-blue-100 px-2 py-1 rounded' : ''}"
               >
                 {expandedRows.has(audit.id) ? '접기' : '펼치기'}
               </button>
@@ -218,22 +218,22 @@
           </tr>
           
           {#if expandedRows.has(audit.id)}
-            <tr class="bg-gray-50">
+            <tr class="bg-blue-25 border-l-4 border-blue-400">
               <td colspan="6" class="px-6 py-4">
-                <div class="space-y-3">
+                <div class="space-y-3 max-w-full">
                   <div>
                     <h4 class="text-sm font-medium text-gray-900 mb-1">설명</h4>
-                    <p class="text-sm text-gray-600 word-break break-words overflow-wrap break-word leading-relaxed">
+                    <div class="text-sm text-gray-600 leading-relaxed max-w-full break-words whitespace-pre-wrap">
                       {audit.description}
-                    </p>
+                    </div>
                   </div>
                   
                   {#if audit.details}
                     <div>
                       <h4 class="text-sm font-medium text-gray-900 mb-1">세부 정보</h4>
-                      <pre class="text-xs bg-white border rounded p-3 overflow-x-auto max-h-40 word-break break-all">
-                        {JSON.stringify(audit.details, null, 2)}
-                      </pre>
+                      <div class="text-xs bg-white border rounded p-3 overflow-auto max-h-60 max-w-full">
+                        <pre class="whitespace-pre-wrap break-words font-mono text-xs">{JSON.stringify(audit.details, null, 2)}</pre>
+                      </div>
                     </div>
                   {/if}
                 </div>

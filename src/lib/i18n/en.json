@@ -2,6 +2,23 @@
   "header": {
     "subtitle": "10-Second Mobile Friendliness Checker"
   },
+  "trust": {
+    "poweredBy": "Powered by Google",
+    "officialApi": "Official Google PageSpeed Insights API",
+    "lighthouseEngine": "Lighthouse Engine",
+    "description": "to provide accurate analysis",
+    "realData": "Real Google Data",
+    "chromeUxReport": "Chrome UX Report Based",
+    "lighthouseVersion": "Lighthouse v11 Engine",
+    "officialData": "Google Official Data",
+    "officialApiUse": "Google Official API Usage",
+    "realtimeLighthouse": "Real-time Lighthouse Analysis",
+    "chromeUxBased": "Chrome UX Report Based",
+    "techStack": "Technology Stack:",
+    "techDescription": "Google PageSpeed Insights API v5 • Lighthouse v11 • Chrome User Experience Report • Real User Monitoring (RUM) Data",
+    "copyright": "© 2025 MoCheck. Made with ❤️ using Google's official web performance tools",
+    "disclaimer": "This tool uses the same engine as Google's official PageSpeed Insights API to accurately measure website performance"
+  },
   "input": {
     "urlLabel": "Website URL to analyze",
     "urlPlaceholder": "https://example.com",
@@ -27,13 +44,25 @@
     "noIssues": "No issues found that need improvement."
   },
   "audits": {
-    "title": "Detailed Audit Results"
+    "title": "Detailed Inspection Results"
   },
   "export": {
-    "title": "Share Results"
+    "title": "Share Results",
+    "png": "Save as PNG",
+    "pdf": "Save as PDF",
+    "csv": "Export to CSV",
+    "json": "Export to JSON", 
+    "kakao": "Share to KakaoTalk",
+    "pngError": "Failed to export PNG.",
+    "pdfError": "Failed to export PDF.",
+    "csvError": "Failed to export CSV.",
+    "jsonError": "Failed to export JSON.",
+    "kakaoError": "Failed to share to KakaoTalk.",
+    "noResults": "No results available. Please analyze a URL first."
   },
   "error": {
-    "title": "An error occurred"
+    "title": "An error occurred",
+    "invalidUrl": "Please enter a valid URL."
   },
   "empty": {
     "title": "Analyze a website",
