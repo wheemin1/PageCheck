@@ -1,0 +1,7 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="180" height="180" rx="40" fill="#3B82F6"/>
+  <path d="M45 67.5h90M45 90h67.5M45 112.5h45" stroke="white" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="123.75" cy="112.5" r="16.875" fill="#10B981"/>
+  <path d="M115.31 112.5l5.625 5.625 11.25-11.25" stroke="white" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="90" y="155" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="Arial, sans-serif">MoCheck</text>
+</svg>

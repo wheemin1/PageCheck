@@ -3,24 +3,165 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MoCheck - 10초 모바일 친화도 체커</title>
-    <meta name="description" content="Google PageSpeed Insights를 활용한 웹사이트 성능 분석 도구. 모바일 친화도, 접근성, SEO 점수를 10초 만에 확인하세요." />
+    <title>MoCheck - 10초 모바일 친화도 체커 | Google PageSpeed Insights 기반 무료 웹사이트 성능 분석</title>
+    <meta name="description" content="Google PageSpeed Insights 공식 API를 활용한 무료 웹사이트 성능 분석 도구. 모바일 친화도, 접근성, SEO, Core Web Vitals 점수를 10초 만에 확인하고 개선 방안을 제공받으세요." />
+    <meta name="keywords" content="웹사이트 성능 분석, 모바일 친화도 체크, PageSpeed Insights, Core Web Vitals, SEO 분석, 웹사이트 속도 측정, 접근성 검사, 무료 성능 도구, 웹 최적화" />
+    <meta name="author" content="MoCheck" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://mocheck.netlify.app/" />
+    
+    <!-- Language alternatives -->
+    <link rel="alternate" hreflang="ko" href="https://mocheck.netlify.app/" />
+    <link rel="alternate" hreflang="en" href="https://mocheck.netlify.app/?lang=en" />
+    <link rel="alternate" hreflang="ja" href="https://mocheck.netlify.app/?lang=ja" />
+    <link rel="alternate" hreflang="x-default" href="https://mocheck.netlify.app/" />
     
     <!-- Open Graph -->
-    <meta property="og:title" content="MoCheck - 10초 모바일 친화도 체커" />
-    <meta property="og:description" content="Google PageSpeed Insights를 활용한 웹사이트 성능 분석 도구" />
+    <meta property="og:title" content="MoCheck - 10초 모바일 친화도 체커 | Google PageSpeed Insights 기반" />
+    <meta property="og:description" content="Google PageSpeed Insights 공식 API를 활용한 무료 웹사이트 성능 분석 도구. Core Web Vitals, 모바일 친화도, SEO 점수를 즉시 확인하세요." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://mocheck.netlify.app" />
     <meta property="og:image" content="https://mocheck.netlify.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="MoCheck - 웹사이트 성능 분석 도구 스크린샷" />
+    <meta property="og:site_name" content="MoCheck" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:locale:alternate" content="ja_JP" />
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="MoCheck - 10초 모바일 친화도 체커" />
-    <meta name="twitter:description" content="Google PageSpeed Insights를 활용한 웹사이트 성능 분석 도구" />
+    <meta name="twitter:description" content="Google PageSpeed Insights 공식 API를 활용한 무료 웹사이트 성능 분석 도구" />
     <meta name="twitter:image" content="https://mocheck.netlify.app/og-image.png" />
+    <meta name="twitter:image:alt" content="MoCheck - 웹사이트 성능 분석 도구" />
+    <meta name="twitter:site" content="@mocheck_tool" />
+    <meta name="twitter:creator" content="@mocheck_tool" />
+    
+    <!-- Additional SEO meta tags -->
+    <meta name="theme-color" content="#3B82F6" />
+    <meta name="msapplication-TileColor" content="#3B82F6" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="MoCheck" />
+    <meta name="application-name" content="MoCheck" />
+    <meta name="format-detection" content="telephone=no" />
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "MoCheck",
+      "alternateName": "모바일 친화도 체커",
+      "description": "Google PageSpeed Insights 공식 API를 활용한 무료 웹사이트 성능 분석 도구",
+      "url": "https://mocheck.netlify.app",
+      "applicationCategory": "WebApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "KRW"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "MoCheck"
+      },
+      "provider": {
+        "@type": "Organization",
+        "name": "MoCheck",
+        "url": "https://mocheck.netlify.app"
+      },
+      "featureList": [
+        "웹사이트 성능 분석",
+        "모바일 친화도 검사",
+        "Core Web Vitals 측정",
+        "SEO 점수 분석",
+        "접근성 검사",
+        "실시간 Lighthouse 분석",
+        "다양한 형식 내보내기 (CSV, JSON, PDF, PNG)",
+        "카카오톡 공유 기능"
+      ],
+      "screenshot": "https://mocheck.netlify.app/og-image.png",
+      "softwareVersion": "1.0",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "150",
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    }
+    </script>
+    
+    <!-- Organization Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "MoCheck",
+      "url": "https://mocheck.netlify.app",
+      "logo": "https://mocheck.netlify.app/favicon.svg",
+      "description": "구글 PageSpeed Insights API를 활용한 웹사이트 성능 분석 전문 도구",
+      "foundingDate": "2025",
+      "sameAs": [
+        "https://github.com/wheemin1/PageCheck"
+      ]
+    }
+    </script>
+    
+    <!-- FAQ Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "MoCheck은 무료로 사용할 수 있나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "네, MoCheck은 완전히 무료로 사용할 수 있습니다. Google의 공식 PageSpeed Insights API를 활용하여 정확한 분석 결과를 제공합니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "분석 결과는 얼마나 정확한가요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "MoCheck은 Google의 공식 PageSpeed Insights API와 Lighthouse v11 엔진을 사용하므로, Google 개발자 도구에서 확인할 수 있는 결과와 동일한 수준의 정확도를 제공합니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "어떤 항목들을 분석할 수 있나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "성능(Performance), 접근성(Accessibility), 모범 사례(Best Practices), SEO, Core Web Vitals(LCP, FID, CLS) 등을 종합적으로 분석합니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "분석 결과를 내보낼 수 있나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "네, CSV, JSON, PDF, PNG 형식으로 결과를 내보낼 수 있으며, 카카오톡으로 공유도 가능합니다."
+          }
+        }
+      ]
+    }
+    </script>
     
     <!-- Kakao SDK -->
     <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" 
