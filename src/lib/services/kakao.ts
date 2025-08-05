@@ -21,9 +21,18 @@ export function initKakao(): void {
     // Get API key from environment variable
     const APP_KEY = import.meta.env.VITE_KAKAO_APP_KEY;
     
+    console.log('Environment check:', {
+      isDev: import.meta.env.DEV,
+      mode: import.meta.env.MODE,
+      hasKey: !!APP_KEY,
+      keyPrefix: APP_KEY ? APP_KEY.substring(0, 4) + '...' : 'none'
+    });
+    
     if (!APP_KEY || APP_KEY === 'your_javascript_key_here') {
       console.log('Kakao SDK available but no valid app key configured');
-      console.log('Please set VITE_KAKAO_APP_KEY in .env.local file');
+      console.log('Please set VITE_KAKAO_APP_KEY in environment variables');
+      console.log('For local development: add to .env.local file');
+      console.log('For production: set in Netlify environment variables');
       return;
     }
 

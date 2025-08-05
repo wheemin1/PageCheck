@@ -16,11 +16,10 @@ Google PageSpeed Insights API를 활용한 웹사이트 성능 분석 도구입�
 ## 🛠 기술 스택
 
 ### Frontend
-- **Svelte**: 반응형 UI 프레임워크
-- **Vite**: 빠른 빌드 도구
+- **SvelteKit**: 풀스택 웹 프레임워크
 - **TypeScript**: 타입 안전성
 - **Tailwind CSS**: 유틸리티 기반 스타일링
-- **Svelte-i18n**: 다국어 지원
+- **Vite**: 빠른 빌드 도구
 
 ### Backend
 - **Netlify Functions**: 서버리스 백엔드
@@ -37,15 +36,50 @@ Google PageSpeed Insights API를 활용한 웹사이트 성능 분석 도구입�
 
 ```bash
 # 저장소 클론
-git clone https://github.com/your-username/mocheck.git
-cd mocheck
+git clone https://github.com/wheemin1/PageCheck.git
+cd PageCheck
 
 # 의존성 설치
 npm install
 
 # 환경변수 설정
-cp .env.example .env.local
-# .env.local에서 PSI_API_KEY 설정
+# .env.local 파일 생성 후 다음 내용 추가:
+VITE_KAKAO_APP_KEY=your_kakao_javascript_key_here
 
-# 개발 서버 실행
-npm run dev
+# Netlify Functions와 함께 개발 서버 실행
+netlify dev
+```
+
+### 배포 (Netlify)
+
+#### 1. GitHub 저장소 연결
+- Netlify 대시보드에서 "New site from Git" 선택
+- GitHub 저장소 연결
+
+#### 2. 빌드 설정
+- **Build command**: `npm run build`
+- **Publish directory**: `build`
+
+#### 3. 환경변수 설정
+Netlify 대시보드 → Site settings → Environment variables에서 설정:
+```bash
+VITE_KAKAO_APP_KEY=750f37260ad32e3c51064ec6abff6dd2
+```
+
+#### 4. 카카오 개발자 플랫폼 설정
+1. [Kakao Developers](https://developers.kakao.com) 로그인
+2. 내 애플리케이션 → 플랫폼 → Web 플랫폼 등록
+3. 사이트 도메인에 배포된 Netlify URL 추가
+
+## 🔧 환경변수
+
+| 변수명 | 설명 | 필수 여부 |
+|--------|------|-----------|
+| `VITE_KAKAO_APP_KEY` | 카카오톡 공유용 JavaScript 키 | 선택 (없으면 클립보드 복사) |
+
+## 📱 사용법
+
+1. **URL 입력**: 분석할 웹사이트 URL 입력
+2. **분석 시작**: "분석 시작" 버튼 클릭
+3. **결과 확인**: 종합 점수, Core Web Vitals, 개선 제안 확인
+4. **결과 공유**: PNG, PDF 다운로드 또는 카카오톡 공유
