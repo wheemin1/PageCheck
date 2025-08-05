@@ -51,11 +51,13 @@
     "png": "PNGで保存",
     "pdf": "PDFで保存",
     "csv": "CSVでエクスポート",
+    "xlsx": "XLSXでエクスポート",
     "json": "JSONでエクスポート",
     "kakao": "カカオトーク共有",
     "pngError": "PNG エクスポートに失敗しました。",
     "pdfError": "PDF エクスポートに失敗しました。",
     "csvError": "CSV エクスポートに失敗しました。",
+    "xlsxError": "XLSX エクスポートに失敗しました。",
     "jsonError": "JSON エクスポートに失敗しました。",
     "kakaoError": "カカオトーク共有に失敗しました。",
     "noResults": "分析結果がありません。まずURLを分析してください。"

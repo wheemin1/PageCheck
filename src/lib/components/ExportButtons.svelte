@@ -1,7 +1,7 @@
 <script lang="ts">
   import { appStore } from '../stores/app';
   import { t } from '../stores/i18n';
-  import { exportToPNG, exportToPDF, exportToCSV, exportToJSON } from '../services/export';
+  import { exportToPNG, exportToPDF, exportToCSV, exportToJSON, exportToXLSX } from '../services/export';
   import { shareToKakao } from '../services/kakao';
 
   let loading = {
@@ -9,6 +9,7 @@
     pdf: false,
     csv: false,
     json: false,
+    xlsx: false,
     kakao: false
   };
 
@@ -96,12 +97,35 @@
       loading.json = false;
     }
   }
+
+  async function handleXLSXExport() {
+    const results = $appStore.results;
+    console.log('XLSX export clicked, results:', results);
+    
+    if (!results) {
+      console.error('No results available for XLSX export');
+      alert($t('export.noResults'));
+      return;
+    }
+
+    try {
+      loading.xlsx = true;
+      console.log('Starting XLSX export...');
+      await exportToXLSX(results);
+      console.log('XLSX export completed');
+    } catch (error) {
+      console.error('XLSX export error:', error);
+      alert(error instanceof Error ? error.message : $t('export.xlsxError'));
+    } finally {
+      loading.xlsx = false;
+    }
+  }
 </script>
 
 <div>
   <h2 class="text-xl font-semibold text-gray-900 mb-6">{$t('export.title')}</h2>
   
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
     <!-- CSV Export -->
     <button
       on:click={handleCSVExport}
@@ -136,6 +160,24 @@
         </svg>
       {/if}
       {$t('export.json')}
+    </button>
+
+    <!-- XLSX Export -->
+    <button
+      on:click={handleXLSXExport}
+      disabled={loading.xlsx}
+      class="flex items-center justify-center px-4 py-3 border border-emerald-300 rounded-lg text-sm font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+    >
+      {#if loading.xlsx}
+        <svg class="animate-spin w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+      {:else}
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+        </svg>
+      {/if}
+      {$t('export.xlsx')}
     </button>
 
     <!-- PNG Export -->

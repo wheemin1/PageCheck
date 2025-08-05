@@ -51,11 +51,13 @@
     "png": "PNG로 저장",
     "pdf": "PDF로 저장", 
     "csv": "CSV로 내보내기",
+    "xlsx": "XLSX로 내보내기",
     "json": "JSON으로 내보내기",
     "kakao": "카카오톡 공유",
     "pngError": "PNG 내보내기에 실패했습니다.",
     "pdfError": "PDF 내보내기에 실패했습니다.",
     "csvError": "CSV 내보내기에 실패했습니다.",
+    "xlsxError": "XLSX 내보내기에 실패했습니다.",
     "jsonError": "JSON 내보내기에 실패했습니다.",
     "kakaoError": "카카오톡 공유에 실패했습니다.",
     "noResults": "분석 결과가 없습니다. 먼저 URL을 분석해주세요."

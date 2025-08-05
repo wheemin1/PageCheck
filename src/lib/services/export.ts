@@ -1,5 +1,6 @@
 import { toPng } from 'html-to-image';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+import * as XLSX from 'xlsx';
 import type { PageSpeedResults } from '../types/pagespeed';
 
 export async function exportToPNG(): Promise<void> {
@@ -67,13 +68,18 @@ export async function exportToPDF(results: PageSpeedResults): Promise<void> {
       color: rgb(0.3, 0.3, 0.3)
     });
     
+    // Calculate overall score
+    const overallScore = Math.round(
+      (results.scores.performance + results.scores.accessibility + results.scores.seo + results.scores.bestPractices) / 4
+    );
+    
     // Overall Score
-    page1.drawText(`종합 점수: ${results.overallScore}점`, {
+    page1.drawText(`종합 점수: ${overallScore}점`, {
       x: 50,
       y: height - 150,
       size: 20,
       font: boldFont,
-      color: getScoreColor(results.overallScore)
+      color: getScoreColor(overallScore)
     });
     
     // Category Scores
@@ -305,5 +311,74 @@ export async function exportToJSON(results: PageSpeedResults): Promise<void> {
   } catch (error) {
     console.error('JSON export failed:', error);
     throw new Error('JSON 내보내기에 실패했습니다.');
+  }
+}
+
+export async function exportToXLSX(results: PageSpeedResults): Promise<void> {
+  try {
+    console.log('Starting XLSX export with results:', results);
+    
+    // 워크북 생성
+    const workbook = XLSX.utils.book_new();
+    
+    // 1. 요약 시트
+    const summaryData = [
+      ['MoCheck - 성능 분석 보고서'],
+      [''],
+      ['분석 대상', results.url],
+      ['분석 날짜', new Date().toLocaleString('ko-KR')],
+      ['전략', results.strategy === 'mobile' ? '모바일' : '데스크톱'],
+      [''],
+      ['== 성능 점수 =='],
+      ['항목', '점수', '등급'],
+      ['성능', results.scores.performance, results.scores.performance >= 90 ? 'A' : results.scores.performance >= 50 ? 'B' : 'C'],
+      ['접근성', results.scores.accessibility, results.scores.accessibility >= 90 ? 'A' : results.scores.accessibility >= 50 ? 'B' : 'C'],
+      ['모범 사례', results.scores.bestPractices, results.scores.bestPractices >= 90 ? 'A' : results.scores.bestPractices >= 50 ? 'B' : 'C'],
+      ['SEO', results.scores.seo, results.scores.seo >= 90 ? 'A' : results.scores.seo >= 50 ? 'B' : 'C']
+    ];
+    
+    if (results.coreWebVitals) {
+      summaryData.push(
+        [''],
+        ['== Core Web Vitals =='],
+        ['지표', '값', '상태'],
+        ['LCP (Largest Contentful Paint)', results.coreWebVitals.lcp?.displayValue || 'N/A', results.coreWebVitals.lcp?.score >= 0.9 ? '좋음' : results.coreWebVitals.lcp?.score >= 0.5 ? '개선 필요' : '나쁨'],
+        ['FID (First Input Delay)', results.coreWebVitals.fid?.displayValue || 'N/A', results.coreWebVitals.fid?.score >= 0.9 ? '좋음' : results.coreWebVitals.fid?.score >= 0.5 ? '개선 필요' : '나쁨'],
+        ['CLS (Cumulative Layout Shift)', results.coreWebVitals.cls?.displayValue || 'N/A', results.coreWebVitals.cls?.score >= 0.9 ? '좋음' : results.coreWebVitals.cls?.score >= 0.5 ? '개선 필요' : '나쁨']
+      );
+    }
+    
+    const summaryWS = XLSX.utils.aoa_to_sheet(summaryData);
+    XLSX.utils.book_append_sheet(workbook, summaryWS, '요약');
+    
+    // 2. 감사 항목 시트
+    if (results.audits && results.audits.length > 0) {
+      const auditData = [
+        ['감사 항목 세부사항'],
+        [''],
+        ['제목', '점수', '값', '설명']
+      ];
+      
+      results.audits.forEach(audit => {
+        auditData.push([
+          audit.title,
+          audit.score !== null ? Math.round(audit.score * 100).toString() : 'N/A',
+          audit.displayValue || 'N/A',
+          audit.description
+        ]);
+      });
+      
+      const auditWS = XLSX.utils.aoa_to_sheet(auditData);
+      XLSX.utils.book_append_sheet(workbook, auditWS, '감사항목');
+    }
+    
+    // 파일 다운로드
+    const fileName = `mocheck-results-${Date.now()}.xlsx`;
+    XLSX.writeFile(workbook, fileName);
+    
+    console.log('XLSX export completed successfully:', fileName);
+  } catch (error) {
+    console.error('XLSX export failed:', error);
+    throw new Error('XLSX 내보내기에 실패했습니다.');
   }
 }
