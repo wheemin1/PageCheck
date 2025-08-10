@@ -1,0 +1,47 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Gradient -->
+  <defs>
+    <linearGradient id="backgroundGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E40AF;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#backgroundGrad)"/>
+  
+  <!-- Main Content Card -->
+  <rect x="100" y="100" width="1000" height="430" rx="20" ry="20" fill="white" filter="url(#shadow)"/>
+  
+  <!-- Icon -->
+  <circle cx="300" cy="280" r="60" fill="#3B82F6"/>
+  <path d="M300 240 L300 320 M260 280 L340 280" stroke="white" stroke-width="8" stroke-linecap="round"/>
+  <path d="M270 260 L300 230 L330 260" stroke="white" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Title -->
+  <text x="400" y="260" font-family="Arial, sans-serif" font-size="64" font-weight="bold" fill="#1F2937">MoCheck</text>
+  
+  <!-- Subtitle -->
+  <text x="400" y="310" font-family="Arial, sans-serif" font-size="32" fill="#6B7280">10초 모바일 친화도 체커</text>
+  
+  <!-- Description -->
+  <text x="400" y="350" font-family="Arial, sans-serif" font-size="24" fill="#9CA3AF">Google PageSpeed Insights 공식 API 기반</text>
+  
+  <!-- Features -->
+  <g fill="#10B981" font-family="Arial, sans-serif" font-size="18">
+    <circle cx="420" cy="390" r="4"/>
+    <text x="440" y="395">성능 분석</text>
+    <circle cx="540" cy="390" r="4"/>
+    <text x="560" y="395">SEO 검사</text>
+    <circle cx="650" cy="390" r="4"/>
+    <text x="670" y="395">접근성 체크</text>
+    <circle cx="780" cy="390" r="4"/>
+    <text x="800" y="395">Core Web Vitals</text>
+  </g>
+  
+  <!-- URL -->
+  <text x="600" y="580" font-family="Arial, sans-serif" font-size="20" fill="white" text-anchor="middle" opacity="0.9">mocheck.netlify.app</text>
+</svg>

@@ -268,6 +268,23 @@
           <p class="text-xs text-gray-500 mt-1">
             {$t('trust.disclaimer')}
           </p>
+          
+          <!-- Contact Information -->
+          <div class="mt-4 pt-3 border-t border-gray-100">
+            <div class="flex items-center justify-center space-x-2 text-xs text-gray-500">
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+              </svg>
+              <span>버그제보 및 추가 개선 문의사항:</span>
+              <a 
+                href="mailto:jowheemin@gmail.com?subject=MoCheck 문의사항"
+                class="text-blue-600 hover:text-blue-800 underline font-medium transition-colors"
+              >
+                jowheemin@gmail.com
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
