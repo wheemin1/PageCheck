@@ -1,5 +1,4 @@
 import { appStore } from '../stores/app';
-import { getFromCache, setToCache } from '../utils/cache';
 import { calculateOverallScore } from '../utils/score';
 import type { PageSpeedResults, PageSpeedResponse } from '../types/pagespeed';
 
@@ -11,15 +10,6 @@ export async function analyzeUrl(url: string, strategy: 'mobile' | 'desktop' = '
     appStore.setError(null);
     appStore.setCurrentUrl(url);
     appStore.setCurrentStrategy(strategy);
-
-    // Check cache first
-    const cacheKey = `${url}_${strategy}`;
-    const cached = getFromCache<PageSpeedResults>(cacheKey);
-    if (cached) {
-      appStore.setResults(cached, true); // true = from cache
-      appStore.setLoading(false);
-      return;
-    }
 
     // Enhanced handling for complex domains
     const complexDomains = ['naver.com', 'daum.net', 'kakao.com', 'gamsgo.com', 'coupang.com', 'auction.co.kr'];
@@ -76,10 +66,7 @@ export async function analyzeUrl(url: string, strategy: 'mobile' | 'desktop' = '
     const results = processPageSpeedData(data);
     console.log('Processed Results:', results.scores);
     
-    // Cache results
-    setToCache(cacheKey, results);
-    
-    appStore.setResults(results, false); // false = fresh data (not from cache)
+    appStore.setResults(results, false); // 항상 최신 데이터
   } catch (error) {
     console.error('PageSpeed analysis failed:', error);
     appStore.setError(error instanceof Error ? error.message : 'Unknown error occurred');

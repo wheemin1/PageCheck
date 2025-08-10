@@ -7,7 +7,6 @@ interface AppState {
   results: PageSpeedResults | null;
   currentUrl: string;
   currentStrategy: 'mobile' | 'desktop';
-  isFromCache: boolean;
 }
 
 const initialState: AppState = {
@@ -15,8 +14,7 @@ const initialState: AppState = {
   error: null,
   results: null,
   currentUrl: '',
-  currentStrategy: 'mobile',
-  isFromCache: false
+  currentStrategy: 'mobile'
 };
 
 function createAppStore() {
@@ -26,8 +24,8 @@ function createAppStore() {
     subscribe,
     setLoading: (loading: boolean) => update(state => ({ ...state, loading })),
     setError: (error: string | null) => update(state => ({ ...state, error })),
-    setResults: (results: PageSpeedResults | null, isFromCache: boolean = false) => 
-      update(state => ({ ...state, results, isFromCache })),
+    setResults: (results: PageSpeedResults | null) => 
+      update(state => ({ ...state, results })),
     setCurrentUrl: (url: string) => update(state => ({ ...state, currentUrl: url })),
     setCurrentStrategy: (strategy: 'mobile' | 'desktop') => update(state => ({ ...state, currentStrategy: strategy })),
     reset: () => set(initialState)
