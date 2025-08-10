@@ -145,18 +145,18 @@
             <div class="flex items-center space-x-2">
               <!-- Cache Status Badge -->
               {#if $appStore.isFromCache}
-                <div class="flex items-center space-x-1 text-xs bg-amber-50 text-amber-700 px-3 py-1 rounded-full border border-amber-200">
+                <div class="flex items-center space-x-1 text-xs bg-green-50 text-green-700 px-3 py-1 rounded-full border border-green-200">
                   <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 01-1.414 1.414L5 6.414V8a1 1 0 01-2 0V4zm9 1a1 1 0 010-2h4a1 1 0 011 1v4a1 1 0 01-2 0V6.414l-2.293 2.293a1 1 0 11-1.414-1.414L13.586 5H12z" clip-rule="evenodd"/>
                   </svg>
-                  <span class="font-medium">📋 캐시된 결과</span>
+                  <span class="font-medium">⚡ 빠른 결과 (저장된 데이터)</span>
                 </div>
               {:else}
                 <div class="flex items-center space-x-1 text-xs bg-blue-50 text-blue-700 px-3 py-1 rounded-full border border-blue-200">
-                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <svg class="w-3 h-3 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
                   </svg>
-                  <span class="font-medium">🔄 최신 분석</span>
+                  <span class="font-medium">🔄 실시간 분석 완료</span>
                 </div>
               {/if}
               
