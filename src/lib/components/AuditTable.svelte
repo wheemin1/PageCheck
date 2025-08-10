@@ -40,11 +40,11 @@
 
   function getCategoryDisplayName(category: string): string {
     const names: Record<string, string> = {
-      performance: '성능',
-      accessibility: '접근성',
-      seo: 'SEO',
-      'best-practices': '모범 사례',
-      other: '기타'
+      performance: $t('audits.performance'),
+      accessibility: $t('audits.accessibility'), 
+      seo: $t('audits.seo'),
+      'best-practices': $t('audits.bestPractices'),
+      other: 'Other'
     };
     return names[category] || category;
   }
@@ -124,13 +124,13 @@
 
     <!-- Category Filter -->
     <div>
-      <label for="category" class="block text-sm font-medium text-gray-700 mb-1">카테고리</label>
+      <label for="category" class="block text-sm font-medium text-gray-700 mb-1">{$t('audits.category')}</label>
       <select
         id="category"
         bind:value={selectedCategory}
         class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
-        <option value="all">전체</option>
+        <option value="all">{$t('audits.all')}</option>
         {#each categories as category}
           <option value={category}>{getCategoryDisplayName(category)}</option>
         {/each}
@@ -139,16 +139,16 @@
 
     <!-- Status Filter -->
     <div>
-      <label for="status" class="block text-sm font-medium text-gray-700 mb-1">상태</label>
+      <label for="status" class="block text-sm font-medium text-gray-700 mb-1">{$t('audits.score')}</label>
       <select
         id="status"
         bind:value={selectedStatus}
         class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
-        <option value="all">전체</option>
-        <option value="passed">통과</option>
+        <option value="all">{$t('audits.all')}</option>
+        <option value="passed">{$t('audits.passed')}</option>
         <option value="warning">경고</option>
-        <option value="failed">실패</option>
+        <option value="failed">{$t('audits.failed')}</option>
       </select>
     </div>
   </div>

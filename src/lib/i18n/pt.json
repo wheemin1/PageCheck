@@ -1,0 +1,99 @@
+{
+  "header": {
+    "subtitle": "Verificador de Compatibilidade Mobile em 10 segundos"
+  },
+  "trust": {
+    "poweredBy": "Powered by Google",
+    "officialApi": "API oficial Google PageSpeed Insights",
+    "lighthouseEngine": "Engine Lighthouse",
+    "description": "para fornecer análises precisas",
+    "realData": "Dados reais do Google",
+    "chromeUxReport": "Baseado no Chrome UX Report",
+    "lighthouseVersion": "Engine Lighthouse v11",
+    "officialData": "Dados oficiais do Google",
+    "officialApiUse": "Usando API oficial do Google",
+    "realtimeLighthouse": "Análise Lighthouse em tempo real",
+    "chromeUxBased": "Baseado no Chrome UX Report",
+    "techStack": "Stack tecnológica:",
+    "techDescription": "Google PageSpeed Insights API v5 • Lighthouse v11 • Chrome User Experience Report • Dados Real User Monitoring (RUM)",
+    "copyright": "© 2025 MoCheck. Feito com ❤️ usando ferramentas oficiais de performance web do Google",
+    "disclaimer": "Esta ferramenta usa o mesmo engine da API oficial PageSpeed Insights do Google para medir com precisão a performance do site"
+  },
+  "input": {
+    "urlLabel": "URL do site para análise",
+    "urlPlaceholder": "https://example.com",
+    "analyze": "Analisar",
+    "device": "Tipo de dispositivo",
+    "mobile": "Móvel",
+    "desktop": "Desktop"
+  },
+  "results": {
+    "overview": "Visão Geral da Performance",
+    "overall": "Pontuação Geral",
+    "performance": "Performance",
+    "accessibility": "Acessibilidade",
+    "seo": "SEO",
+    "bestPractices": "Melhores Práticas"
+  },
+  "coreWebVitals": {
+    "title": "Core Web Vitals",
+    "lcp": "Largest Contentful Paint",
+    "fid": "First Input Delay",
+    "cls": "Cumulative Layout Shift",
+    "good": "Bom",
+    "needsImprovement": "Precisa Melhorar",
+    "poor": "Ruim"
+  },
+  "improvements": {
+    "title": "Sugestões de Melhoria",
+    "subtitle": "Recomendações de otimização para melhorar a performance do seu site",
+    "noImprovements": "Excelente! Nenhuma grande oportunidade de melhoria foi encontrada.",
+    "potentialSavings": "Economia potencial:"
+  },
+  "audits": {
+    "title": "Resultados Detalhados da Auditoria",
+    "subtitle": "Resultados completos de todas as auditorias de performance, acessibilidade, SEO e melhores práticas",
+    "category": "Categoria",
+    "audit": "Auditoria",
+    "score": "Pontuação",
+    "value": "Valor",
+    "all": "Todas",
+    "performance": "Performance",
+    "accessibility": "Acessibilidade",
+    "seo": "SEO",
+    "bestPractices": "Melhores Práticas",
+    "passed": "Aprovado",
+    "failed": "Reprovado",
+    "notApplicable": "Não Aplicável"
+  },
+  "export": {
+    "title": "Exportar Resultados",
+    "subtitle": "Exporte os resultados da análise em diferentes formatos",
+    "downloadPdf": "Baixar Relatório PDF",
+    "downloadJson": "Baixar Dados JSON",
+    "shareKakao": "Compartilhar no KakaoTalk"
+  },
+  "tips": {
+    "title": "Dicas de Análise",
+    "largeWebsites": "Sites complexos podem levar até 2 minutos para análise",
+    "mobileVersion": "Tente analisar a versão móvel (ex: m.example.com) para resultados mais rápidos",
+    "timeout": "Se houver timeout, tente novamente mais tarde ou analise uma página mais simples"
+  },
+  "error": {
+    "title": "Erro de Análise",
+    "invalidUrl": "Por favor, insira uma URL válida",
+    "networkError": "Erro de conexão de rede, verifique sua conexão com a internet",
+    "timeout": "Análise expirou, tente novamente mais tarde",
+    "serverError": "Erro do servidor, tente novamente mais tarde",
+    "rateLimitExceeded": "Limite de solicitações da API excedido, tente novamente mais tarde"
+  },
+  "loading": {
+    "analyzing": "Analisando...",
+    "subtitle": "Analisando seu site usando Google PageSpeed Insights",
+    "patience": "Sites complexos podem levar até 2 minutos"
+  },
+  "empty": {
+    "title": "Comece a analisar seu site",
+    "subtitle": "Insira uma URL para obter uma análise detalhada de performance"
+  }
+}

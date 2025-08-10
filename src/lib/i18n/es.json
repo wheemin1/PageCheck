@@ -1,0 +1,99 @@
+{
+  "header": {
+    "subtitle": "Verificador de Compatibilidad Móvil en 10 segundos"
+  },
+  "trust": {
+    "poweredBy": "Powered by Google",
+    "officialApi": "API oficial de Google PageSpeed Insights",
+    "lighthouseEngine": "Motor Lighthouse",
+    "description": "para proporcionar análisis precisos",
+    "realData": "Datos reales de Google",
+    "chromeUxReport": "Basado en Chrome UX Report",
+    "lighthouseVersion": "Motor Lighthouse v11",
+    "officialData": "Datos oficiales de Google",
+    "officialApiUse": "Usando API oficial de Google",
+    "realtimeLighthouse": "Análisis Lighthouse en tiempo real",
+    "chromeUxBased": "Basado en Chrome UX Report",
+    "techStack": "Stack tecnológico:",
+    "techDescription": "Google PageSpeed Insights API v5 • Lighthouse v11 • Chrome User Experience Report • Datos Real User Monitoring (RUM)",
+    "copyright": "© 2025 MoCheck. Hecho con ❤️ usando herramientas oficiales de rendimiento web de Google",
+    "disclaimer": "Esta herramienta usa el mismo motor que la API oficial PageSpeed Insights de Google para medir con precisión el rendimiento del sitio web"
+  },
+  "input": {
+    "urlLabel": "URL del sitio web a analizar",
+    "urlPlaceholder": "https://example.com",
+    "analyze": "Analizar",
+    "device": "Tipo de dispositivo",
+    "mobile": "Móvil",
+    "desktop": "Escritorio"
+  },
+  "results": {
+    "overview": "Resumen de Rendimiento",
+    "overall": "Puntuación General",
+    "performance": "Rendimiento",
+    "accessibility": "Accesibilidad",
+    "seo": "SEO",
+    "bestPractices": "Mejores Prácticas"
+  },
+  "coreWebVitals": {
+    "title": "Core Web Vitals",
+    "lcp": "Largest Contentful Paint",
+    "fid": "First Input Delay",
+    "cls": "Cumulative Layout Shift",
+    "good": "Bueno",
+    "needsImprovement": "Necesita Mejora",
+    "poor": "Malo"
+  },
+  "improvements": {
+    "title": "Sugerencias de Mejora",
+    "subtitle": "Recomendaciones de optimización para mejorar el rendimiento de su sitio web",
+    "noImprovements": "¡Excelente! No se encontraron grandes oportunidades de mejora.",
+    "potentialSavings": "Ahorro potencial:"
+  },
+  "audits": {
+    "title": "Resultados Detallados de Auditoría",
+    "subtitle": "Resultados completos de todas las auditorías de rendimiento, accesibilidad, SEO y mejores prácticas",
+    "category": "Categoría",
+    "audit": "Auditoría",
+    "score": "Puntuación",
+    "value": "Valor",
+    "all": "Todas",
+    "performance": "Rendimiento",
+    "accessibility": "Accesibilidad",
+    "seo": "SEO",
+    "bestPractices": "Mejores Prácticas",
+    "passed": "Aprobado",
+    "failed": "Fallido",
+    "notApplicable": "No Aplicable"
+  },
+  "export": {
+    "title": "Exportar Resultados",
+    "subtitle": "Exportar los resultados del análisis en diferentes formatos",
+    "downloadPdf": "Descargar Informe PDF",
+    "downloadJson": "Descargar Datos JSON",
+    "shareKakao": "Compartir en KakaoTalk"
+  },
+  "tips": {
+    "title": "Consejos de Análisis",
+    "largeWebsites": "Los sitios web complejos pueden tardar hasta 2 minutos en analizarse",
+    "mobileVersion": "Intente analizar la versión móvil (ej: m.example.com) para obtener resultados más rápidos",
+    "timeout": "Si hay timeout, inténtelo de nuevo más tarde o analice una página más simple"
+  },
+  "error": {
+    "title": "Error de Análisis",
+    "invalidUrl": "Por favor, ingrese una URL válida",
+    "networkError": "Error de conexión de red, verifique su conexión a internet",
+    "timeout": "Análisis expirado, inténtelo de nuevo más tarde",
+    "serverError": "Error del servidor, inténtelo de nuevo más tarde",
+    "rateLimitExceeded": "Límite de solicitudes de API excedido, inténtelo de nuevo más tarde"
+  },
+  "loading": {
+    "analyzing": "Analizando...",
+    "subtitle": "Analizando su sitio web usando Google PageSpeed Insights",
+    "patience": "Los sitios web complejos pueden tardar hasta 2 minutos"
+  },
+  "empty": {
+    "title": "Comience a analizar su sitio web",
+    "subtitle": "Ingrese una URL para obtener un análisis detallado de rendimiento"
+  }
+}

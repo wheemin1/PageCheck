@@ -41,7 +41,7 @@ export const t = derived(
 );
 
 export async function initI18n() {
-  const langs = ['ko', 'en', 'ja'];
+  const langs = ['ko', 'en', 'ja', 'zh', 'es', 'pt', 'fr', 'de'];
   const loadedTranslations: Record<string, Translations> = {};
   
   for (const lang of langs) {

@@ -1,0 +1,99 @@
+{
+  "header": {
+    "subtitle": "10秒移动端友好度检查器"
+  },
+  "trust": {
+    "poweredBy": "Powered by Google",
+    "officialApi": "官方 Google PageSpeed Insights API",
+    "lighthouseEngine": "Lighthouse 引擎",
+    "description": "提供准确的分析",
+    "realData": "真实 Google 数据",
+    "chromeUxReport": "基于 Chrome UX Report",
+    "lighthouseVersion": "Lighthouse v11 引擎",
+    "officialData": "Google 官方数据",
+    "officialApiUse": "使用 Google 官方 API",
+    "realtimeLighthouse": "实时 Lighthouse 分析",
+    "chromeUxBased": "基于 Chrome UX Report",
+    "techStack": "技术栈：",
+    "techDescription": "Google PageSpeed Insights API v5 • Lighthouse v11 • Chrome User Experience Report • Real User Monitoring (RUM) 数据",
+    "copyright": "© 2025 MoCheck. 使用 Google 官方网页性能工具制作 ❤️",
+    "disclaimer": "此工具使用与 Google 官方 PageSpeed Insights API 相同的引擎来准确测量网站性能"
+  },
+  "input": {
+    "urlLabel": "要分析的网站 URL",
+    "urlPlaceholder": "https://example.com",
+    "analyze": "分析",
+    "device": "设备类型",
+    "mobile": "移动端",
+    "desktop": "桌面端"
+  },
+  "results": {
+    "overview": "性能概览",
+    "overall": "总体评分",
+    "performance": "性能",
+    "accessibility": "可访问性",
+    "seo": "SEO",
+    "bestPractices": "最佳实践"
+  },
+  "coreWebVitals": {
+    "title": "Core Web Vitals",
+    "lcp": "Largest Contentful Paint",
+    "fid": "First Input Delay",
+    "cls": "Cumulative Layout Shift",
+    "good": "良好",
+    "needsImprovement": "需要改进",
+    "poor": "差"
+  },
+  "improvements": {
+    "title": "改进建议",
+    "subtitle": "优化建议可以提高您的网站性能",
+    "noImprovements": "太棒了！没有发现主要的改进机会。",
+    "potentialSavings": "潜在节省："
+  },
+  "audits": {
+    "title": "详细审核结果",
+    "subtitle": "所有性能、可访问性、SEO 和最佳实践审核的完整结果",
+    "category": "类别",
+    "audit": "审核项目",
+    "score": "评分",
+    "value": "数值",
+    "all": "全部",
+    "performance": "性能",
+    "accessibility": "可访问性",
+    "seo": "SEO",
+    "bestPractices": "最佳实践",
+    "passed": "通过",
+    "failed": "失败",
+    "notApplicable": "不适用"
+  },
+  "export": {
+    "title": "导出结果",
+    "subtitle": "将分析结果导出为不同格式",
+    "downloadPdf": "下载 PDF 报告",
+    "downloadJson": "下载 JSON 数据",
+    "shareKakao": "分享到 KakaoTalk"
+  },
+  "tips": {
+    "title": "分析提示",
+    "largeWebsites": "复杂网站可能需要最多 2 分钟的分析时间",
+    "mobileVersion": "尝试分析移动版本（例如：m.example.com）以获得更快的结果",
+    "timeout": "如果超时，请稍后重试或分析更简单的页面"
+  },
+  "error": {
+    "title": "分析错误",
+    "invalidUrl": "请输入有效的 URL",
+    "networkError": "网络连接错误，请检查您的网络连接",
+    "timeout": "分析超时，请稍后重试",
+    "serverError": "服务器错误，请稍后重试",
+    "rateLimitExceeded": "API 请求限制已超出，请稍后重试"
+  },
+  "loading": {
+    "analyzing": "分析中...",
+    "subtitle": "正在使用 Google PageSpeed Insights 分析您的网站",
+    "patience": "复杂网站可能需要最多 2 分钟"
+  },
+  "empty": {
+    "title": "开始分析您的网站",
+    "subtitle": "输入 URL 以获取详细的性能分析"
+  }
+}

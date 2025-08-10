@@ -1,0 +1,99 @@
+{
+  "header": {
+    "subtitle": "Vérificateur de Compatibilité Mobile en 10 secondes"
+  },
+  "trust": {
+    "poweredBy": "Powered by Google",
+    "officialApi": "API officielle Google PageSpeed Insights",
+    "lighthouseEngine": "Moteur Lighthouse",
+    "description": "pour fournir des analyses précises",
+    "realData": "Données réelles de Google",
+    "chromeUxReport": "Basé sur Chrome UX Report",
+    "lighthouseVersion": "Moteur Lighthouse v11",
+    "officialData": "Données officielles de Google",
+    "officialApiUse": "Utilisant l'API officielle de Google",
+    "realtimeLighthouse": "Analyse Lighthouse en temps réel",
+    "chromeUxBased": "Basé sur Chrome UX Report",
+    "techStack": "Stack technologique :",
+    "techDescription": "Google PageSpeed Insights API v5 • Lighthouse v11 • Chrome User Experience Report • Données Real User Monitoring (RUM)",
+    "copyright": "© 2025 MoCheck. Fait avec ❤️ en utilisant les outils officiels de performance web de Google",
+    "disclaimer": "Cet outil utilise le même moteur que l'API officielle PageSpeed Insights de Google pour mesurer précisément les performances du site web"
+  },
+  "input": {
+    "urlLabel": "URL du site web à analyser",
+    "urlPlaceholder": "https://example.com",
+    "analyze": "Analyser",
+    "device": "Type d'appareil",
+    "mobile": "Mobile",
+    "desktop": "Bureau"
+  },
+  "results": {
+    "overview": "Aperçu des Performances",
+    "overall": "Score Global",
+    "performance": "Performance",
+    "accessibility": "Accessibilité",
+    "seo": "SEO",
+    "bestPractices": "Meilleures Pratiques"
+  },
+  "coreWebVitals": {
+    "title": "Core Web Vitals",
+    "lcp": "Largest Contentful Paint",
+    "fid": "First Input Delay",
+    "cls": "Cumulative Layout Shift",
+    "good": "Bon",
+    "needsImprovement": "À Améliorer",
+    "poor": "Mauvais"
+  },
+  "improvements": {
+    "title": "Suggestions d'Amélioration",
+    "subtitle": "Recommandations d'optimisation pour améliorer les performances de votre site web",
+    "noImprovements": "Excellent ! Aucune grande opportunité d'amélioration trouvée.",
+    "potentialSavings": "Économies potentielles :"
+  },
+  "audits": {
+    "title": "Résultats Détaillés d'Audit",
+    "subtitle": "Résultats complets de tous les audits de performance, accessibilité, SEO et meilleures pratiques",
+    "category": "Catégorie",
+    "audit": "Audit",
+    "score": "Score",
+    "value": "Valeur",
+    "all": "Tous",
+    "performance": "Performance",
+    "accessibility": "Accessibilité",
+    "seo": "SEO",
+    "bestPractices": "Meilleures Pratiques",
+    "passed": "Réussi",
+    "failed": "Échoué",
+    "notApplicable": "Non Applicable"
+  },
+  "export": {
+    "title": "Exporter les Résultats",
+    "subtitle": "Exporter les résultats d'analyse dans différents formats",
+    "downloadPdf": "Télécharger le Rapport PDF",
+    "downloadJson": "Télécharger les Données JSON",
+    "shareKakao": "Partager sur KakaoTalk"
+  },
+  "tips": {
+    "title": "Conseils d'Analyse",
+    "largeWebsites": "Les sites web complexes peuvent prendre jusqu'à 2 minutes pour l'analyse",
+    "mobileVersion": "Essayez d'analyser la version mobile (ex: m.example.com) pour des résultats plus rapides",
+    "timeout": "En cas de timeout, réessayez plus tard ou analysez une page plus simple"
+  },
+  "error": {
+    "title": "Erreur d'Analyse",
+    "invalidUrl": "Veuillez saisir une URL valide",
+    "networkError": "Erreur de connexion réseau, vérifiez votre connexion internet",
+    "timeout": "Analyse expirée, réessayez plus tard",
+    "serverError": "Erreur serveur, réessayez plus tard",
+    "rateLimitExceeded": "Limite de requêtes API dépassée, réessayez plus tard"
+  },
+  "loading": {
+    "analyzing": "Analyse en cours...",
+    "subtitle": "Analyse de votre site web avec Google PageSpeed Insights",
+    "patience": "Les sites web complexes peuvent prendre jusqu'à 2 minutes"
+  },
+  "empty": {
+    "title": "Commencez à analyser votre site web",
+    "subtitle": "Saisissez une URL pour obtenir une analyse détaillée des performances"
+  }
+}

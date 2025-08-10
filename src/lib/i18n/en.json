@@ -35,45 +35,65 @@
     "seo": "SEO",
     "bestPractices": "Best Practices"
   },
-  "vitals": {
-    "title": "Core Web Vitals"
+  "coreWebVitals": {
+    "title": "Core Web Vitals",
+    "lcp": "Largest Contentful Paint",
+    "fid": "First Input Delay",
+    "cls": "Cumulative Layout Shift",
+    "good": "Good",
+    "needsImprovement": "Needs Improvement",
+    "poor": "Poor"
   },
   "improvements": {
-    "title": "Improvement Opportunities",
-    "excellent": "Excellent!",
-    "noIssues": "No issues found that need improvement."
+    "title": "Improvement Suggestions",
+    "subtitle": "Optimization recommendations to improve your website performance",
+    "noImprovements": "Excellent! No major improvement opportunities found.",
+    "potentialSavings": "Potential savings:"
   },
   "audits": {
-    "title": "Detailed Inspection Results"
+    "title": "Detailed Audit Results",
+    "subtitle": "Complete results from all performance, accessibility, SEO, and best practices audits",
+    "category": "Category",
+    "audit": "Audit",
+    "score": "Score",
+    "value": "Value",
+    "all": "All",
+    "performance": "Performance",
+    "accessibility": "Accessibility",
+    "seo": "SEO",
+    "bestPractices": "Best Practices",
+    "passed": "Passed",
+    "failed": "Failed",
+    "notApplicable": "Not Applicable"
   },
   "export": {
-    "title": "Share Results",
-    "png": "Save as PNG",
-    "pdf": "Save as PDF",
-    "csv": "Export CSV",
-    "xlsx": "Export XLSX",
-    "json": "Export JSON", 
-    "kakao": "Share to KakaoTalk",
-    "pngError": "Failed to export PNG.",
-    "pdfError": "Failed to export PDF.",
-    "csvError": "CSV export failed.",
-    "xlsxError": "XLSX export failed.",
-    "jsonError": "JSON export failed.",
-    "kakaoError": "Failed to share to KakaoTalk.",
-    "noResults": "No results available. Please analyze a URL first."
+    "title": "Export Results",
+    "subtitle": "Export analysis results in different formats",
+    "downloadPdf": "Download PDF Report",
+    "downloadJson": "Download JSON Data",
+    "shareKakao": "Share on KakaoTalk"
   },
   "tips": {
-    "title": "💡 Analysis Tips",
-    "largeWebsites": "Large websites like Naver and Daum may take longer to analyze (up to 90 seconds)",
-    "mobileVersion": "For complex sites, try the mobile version (e.g., m.naver.com)",
-    "timeout": "If timeout occurs, refresh the page and try again"
+    "title": "Analysis Tips",
+    "largeWebsites": "Complex websites may take up to 2 minutes for analysis",
+    "mobileVersion": "Try analyzing mobile version (e.g: m.example.com) for faster results",
+    "timeout": "If timeout occurs, try again later or analyze a simpler page"
   },
   "error": {
-    "title": "An error occurred",
-    "invalidUrl": "Please enter a valid URL."
+    "title": "Analysis Error",
+    "invalidUrl": "Please enter a valid URL",
+    "networkError": "Network connection error, please check your internet connection",
+    "timeout": "Analysis timed out, please try again later",
+    "serverError": "Server error, please try again later",
+    "rateLimitExceeded": "API request limit exceeded, please try again later"
+  },
+  "loading": {
+    "analyzing": "Analyzing...",
+    "subtitle": "Analyzing your website using Google PageSpeed Insights",
+    "patience": "Complex websites may take up to 2 minutes"
   },
   "empty": {
-    "title": "Analyze a website",
-    "subtitle": "Enter a URL in the input field above and click the analyze button"
+    "title": "Start analyzing your website",
+    "subtitle": "Enter a URL to get detailed performance analysis"
   }
 }

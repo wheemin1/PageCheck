@@ -1,28 +1,28 @@
 {
   "header": {
-    "subtitle": "10秒モバイルフレンドリーチェッカー"
+    "subtitle": "10秒モバイルフレンドリネスチェッカー"
   },
   "trust": {
     "poweredBy": "Powered by Google",
-    "officialApi": "公式Google PageSpeed Insights API",
-    "lighthouseEngine": "Lighthouseエンジン",
-    "description": "を使用して正確な分析を提供します",
-    "realData": "実際のGoogleデータ",
-    "chromeUxReport": "Chrome UXレポートベース",
-    "lighthouseVersion": "Lighthouse v11エンジン",
-    "officialData": "Google公式データ",
-    "officialApiUse": "Google公式API使用",
-    "realtimeLighthouse": "リアルタイムLighthouse分析",
-    "chromeUxBased": "Chrome UXレポートベース",
-    "techStack": "技術スタック:",
+    "officialApi": "公式 Google PageSpeed Insights API",
+    "lighthouseEngine": "Lighthouse エンジン",
+    "description": "を使用して正確な分析を提供",
+    "realData": "実際の Google データ",
+    "chromeUxReport": "Chrome UX Report ベース",
+    "lighthouseVersion": "Lighthouse v11 エンジン",
+    "officialData": "Google 公式データ",
+    "officialApiUse": "Google 公式 API 使用",
+    "realtimeLighthouse": "リアルタイム Lighthouse 分析",
+    "chromeUxBased": "Chrome UX Report ベース",
+    "techStack": "技術スタック：",
     "techDescription": "Google PageSpeed Insights API v5 • Lighthouse v11 • Chrome User Experience Report • Real User Monitoring (RUM) データ",
-    "copyright": "© 2025 MoCheck. Made with ❤️ using Google's official web performance tools",
-    "disclaimer": "このツールは、GoogleのオフィシャルPageSpeed Insights APIと同じエンジンを使用してウェブサイトのパフォーマンスを正確に測定します"
+    "copyright": "© 2025 MoCheck. Google の公式ウェブパフォーマンスツールで ❤️ を込めて作成",
+    "disclaimer": "このツールは Google の公式 PageSpeed Insights API と同じエンジンを使用してウェブサイトのパフォーマンスを正確に測定します"
   },
   "input": {
-    "urlLabel": "分析するウェブサイトのURL",
+    "urlLabel": "分析するウェブサイトURL",
     "urlPlaceholder": "https://example.com",
-    "analyze": "分析する",
+    "analyze": "分析",
     "device": "デバイスタイプ",
     "mobile": "モバイル",
     "desktop": "デスクトップ"
@@ -35,45 +35,65 @@
     "seo": "SEO",
     "bestPractices": "ベストプラクティス"
   },
-  "vitals": {
-    "title": "Core Web Vitals"
+  "coreWebVitals": {
+    "title": "Core Web Vitals",
+    "lcp": "Largest Contentful Paint",
+    "fid": "First Input Delay",
+    "cls": "Cumulative Layout Shift",
+    "good": "良好",
+    "needsImprovement": "改善が必要",
+    "poor": "不良"
   },
   "improvements": {
     "title": "改善提案",
-    "excellent": "素晴らしい！",
-    "noIssues": "改善が必要な項目はありません。"
+    "subtitle": "ウェブサイトのパフォーマンス向上のための最適化推奨事項",
+    "noImprovements": "素晴らしい！大きな改善機会は見つかりませんでした。",
+    "potentialSavings": "潜在的な節約："
   },
   "audits": {
-    "title": "詳細検査結果"
+    "title": "詳細監査結果",
+    "subtitle": "パフォーマンス、アクセシビリティ、SEO、ベストプラクティスのすべての監査の完全な結果",
+    "category": "カテゴリ",
+    "audit": "監査",
+    "score": "スコア",
+    "value": "値",
+    "all": "すべて",
+    "performance": "パフォーマンス",
+    "accessibility": "アクセシビリティ",
+    "seo": "SEO",
+    "bestPractices": "ベストプラクティス",
+    "passed": "合格",
+    "failed": "不合格",
+    "notApplicable": "適用不可"
   },
   "export": {
-    "title": "結果を共有",
-    "png": "PNGで保存",
-    "pdf": "PDFで保存",
-    "csv": "CSVでエクスポート",
-    "xlsx": "XLSXでエクスポート",
-    "json": "JSONでエクスポート",
-    "kakao": "カカオトーク共有",
-    "pngError": "PNG エクスポートに失敗しました。",
-    "pdfError": "PDF エクスポートに失敗しました。",
-    "csvError": "CSV エクスポートに失敗しました。",
-    "xlsxError": "XLSX エクスポートに失敗しました。",
-    "jsonError": "JSON エクスポートに失敗しました。",
-    "kakaoError": "カカオトーク共有に失敗しました。",
-    "noResults": "分析結果がありません。まずURLを分析してください。"
+    "title": "結果をエクスポート",
+    "subtitle": "分析結果を異なる形式でエクスポート",
+    "downloadPdf": "PDFレポートをダウンロード",
+    "downloadJson": "JSONデータをダウンロード",
+    "shareKakao": "KakaoTalkで共有"
   },
   "tips": {
-    "title": "💡 分析のヒント",
-    "largeWebsites": "ネイバーやダウムなどの大型ウェブサイトは分析に時間がかかる場合があります（最大90秒）",
-    "mobileVersion": "複雑なサイトの場合、モバイル版（例：m.naver.com）をお試しください",
-    "timeout": "タイムアウトが発生した場合、ページを更新して再試行してください"
+    "title": "分析のヒント",
+    "largeWebsites": "複雑なウェブサイトは分析に最大2分かかる場合があります",
+    "mobileVersion": "高速な結果を得るためにモバイル版（例：m.example.com）の分析を試してください",
+    "timeout": "タイムアウトが発生した場合は、後でもう一度試すか、よりシンプルなページを分析してください"
   },
   "error": {
-    "title": "エラーが発生しました",
-    "invalidUrl": "正しいURLを入力してください。"
+    "title": "分析エラー",
+    "invalidUrl": "有効なURLを入力してください",
+    "networkError": "ネットワーク接続エラー、インターネット接続を確認してください",
+    "timeout": "分析がタイムアウトしました、後でもう一度お試しください",
+    "serverError": "サーバーエラー、後でもう一度お試しください",
+    "rateLimitExceeded": "API リクエスト制限を超えました、後でもう一度お試しください"
+  },
+  "loading": {
+    "analyzing": "分析中...",
+    "subtitle": "Google PageSpeed Insights を使用してウェブサイトを分析中",
+    "patience": "複雑なウェブサイトは最大2分かかる場合があります"
   },
   "empty": {
-    "title": "ウェブサイトを分析する",
-    "subtitle": "上の入力フィールドにURLを入力し、分析ボタンをクリックしてください"
+    "title": "ウェブサイトの分析を開始",
+    "subtitle": "詳細なパフォーマンス分析を取得するためにURLを入力してください"
   }
 }
