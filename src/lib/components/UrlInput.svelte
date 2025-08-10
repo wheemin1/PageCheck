@@ -2,9 +2,11 @@
   import { analyzeUrl } from '../services/pagespeed';
   import { t } from '../stores/i18n';
   import { appStore } from '../stores/app';
+  import { clearCache } from '../utils/cache';
 
   let url = '';
   let strategy: 'mobile' | 'desktop' = 'mobile';
+  let forceRefresh = false;
 
   async function handleSubmit() {
     if (!url.trim()) return;
@@ -14,6 +16,13 @@
     
     try {
       new URL(formattedUrl); // Validate URL
+      
+      // Clear cache if force refresh is enabled
+      if (forceRefresh) {
+        const cacheKey = `${formattedUrl}_${strategy}`;
+        sessionStorage.removeItem(`mocheck-${cacheKey}`);
+      }
+      
       await analyzeUrl(formattedUrl, strategy);
     } catch (error) {
       appStore.setError($t('error.invalidUrl'));
@@ -24,6 +33,14 @@
     if (event.key === 'Enter') {
       handleSubmit();
     }
+  }
+
+  function clearAllCache() {
+    clearCache();
+    appStore.setError('🗑️ 캐시가 지워졌습니다. 이제 모든 분석이 새로고침됩니다.');
+    setTimeout(() => {
+      appStore.setError(null);
+    }, 3000);
   }
 </script>
 
@@ -57,28 +74,58 @@
     </div>
   </div>
 
-  <!-- Strategy Toggle -->
-  <div class="flex items-center space-x-4">
-    <span class="text-sm font-medium text-gray-700">{$t('input.device')}:</span>
-    <div class="flex items-center space-x-2">
+  <!-- Strategy and Options -->
+  <div class="space-y-3">
+    <!-- Device Strategy -->
+    <div class="flex items-center space-x-4">
+      <span class="text-sm font-medium text-gray-700">{$t('input.device')}:</span>
+      <div class="flex items-center space-x-2">
+        <label class="flex items-center">
+          <input
+            type="radio"
+            bind:group={strategy}
+            value="mobile"
+            class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+          />
+          <span class="ml-2 text-sm text-gray-700">{$t('input.mobile')}</span>
+        </label>
+        <label class="flex items-center">
+          <input
+            type="radio"
+            bind:group={strategy}
+            value="desktop"
+            class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+          />
+          <span class="ml-2 text-sm text-gray-700">{$t('input.desktop')}</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Cache Options -->
+    <div class="flex items-center justify-between">
       <label class="flex items-center">
         <input
-          type="radio"
-          bind:group={strategy}
-          value="mobile"
-          class="w-4 h-4 text-blue-600 focus:ring-blue-500"
+          type="checkbox"
+          bind:checked={forceRefresh}
+          class="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
         />
-        <span class="ml-2 text-sm text-gray-700">{$t('input.mobile')}</span>
+        <span class="ml-2 text-sm text-gray-700">
+          🔄 항상 최신 데이터 가져오기 (캐시 무시)
+        </span>
       </label>
-      <label class="flex items-center">
-        <input
-          type="radio"
-          bind:group={strategy}
-          value="desktop"
-          class="w-4 h-4 text-blue-600 focus:ring-blue-500"
-        />
-        <span class="ml-2 text-sm text-gray-700">{$t('input.desktop')}</span>
-      </label>
+      
+      <button
+        on:click={clearAllCache}
+        class="text-xs text-gray-500 hover:text-red-600 underline transition-colors"
+        title="저장된 모든 분석 결과 캐시를 지웁니다"
+      >
+        🗑️ 전체 캐시 지우기
+      </button>
+    </div>
+
+    <!-- Cache Info -->
+    <div class="text-xs text-gray-400 bg-gray-50 p-2 rounded">
+      💡 동일한 URL은 30분간 캐시됩니다. "항상 최신 데이터 가져오기"를 체크하면 매번 새로 분석합니다.
     </div>
   </div>
 </div>

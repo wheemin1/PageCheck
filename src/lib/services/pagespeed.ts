@@ -16,7 +16,7 @@ export async function analyzeUrl(url: string, strategy: 'mobile' | 'desktop' = '
     const cacheKey = `${url}_${strategy}`;
     const cached = getFromCache<PageSpeedResults>(cacheKey);
     if (cached) {
-      appStore.setResults(cached);
+      appStore.setResults(cached, true); // true = from cache
       appStore.setLoading(false);
       return;
     }
@@ -79,7 +79,7 @@ export async function analyzeUrl(url: string, strategy: 'mobile' | 'desktop' = '
     // Cache results
     setToCache(cacheKey, results);
     
-    appStore.setResults(results);
+    appStore.setResults(results, false); // false = fresh data (not from cache)
   } catch (error) {
     console.error('PageSpeed analysis failed:', error);
     appStore.setError(error instanceof Error ? error.message : 'Unknown error occurred');
