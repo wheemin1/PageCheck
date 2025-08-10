@@ -21,27 +21,45 @@ export async function analyzeUrl(url: string, strategy: 'mobile' | 'desktop' = '
       return;
     }
 
-    // Special handling for known slow domains
-    const slowDomains = ['naver.com', 'daum.net', 'kakao.com'];
-    const isSlowDomain = slowDomains.some(domain => url.includes(domain));
+    // Enhanced handling for complex domains
+    const complexDomains = ['naver.com', 'daum.net', 'kakao.com', 'gamsgo.com', 'coupang.com', 'auction.co.kr'];
+    const isComplexDomain = complexDomains.some(domain => url.includes(domain));
     
-    if (isSlowDomain) {
-      appStore.setError('⏰ 분석 중입니다... 네이버와 같은 대형 사이트는 분석에 시간이 오래 걸릴 수 있습니다. (최대 90초)');
-      // Clear error after 3 seconds to show it's processing
-      setTimeout(() => {
-        appStore.setError(null);
-      }, 3000);
+    if (isComplexDomain) {
+      appStore.setError('⏰ 복잡한 웹사이트를 분석 중입니다... 최대 2분까지 소요될 수 있습니다. 잠시만 기다려주세요.');
+      // Show countdown timer for user feedback
+      let seconds = 120;
+      const countdownInterval = setInterval(() => {
+        seconds -= 10;
+        if (seconds > 0) {
+          appStore.setError(`⏰ 분석 중... 최대 ${Math.ceil(seconds/60)}분 더 소요될 수 있습니다. (남은 시간: ${seconds}초)`);
+        } else {
+          clearInterval(countdownInterval);
+        }
+      }, 10000);
+      
+      // Clear countdown on completion or error
+      setTimeout(() => clearInterval(countdownInterval), 120000);
     }
 
-    // Make API call
-    const response = await fetch(`${API_ENDPOINT}?url=${encodeURIComponent(url)}&strategy=${strategy}`);
+    // Make API call with longer timeout expectation
+    const response = await fetch(`${API_ENDPOINT}?url=${encodeURIComponent(url)}&strategy=${strategy}`, {
+      // Frontend timeout slightly longer than backend
+      signal: AbortSignal.timeout(125000) // 125초 = 2분 5초
+    });
     
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       
-      // Special handling for 504 errors on large sites
-      if (response.status === 504 && isSlowDomain) {
-        throw new Error('분석 시간이 초과되었습니다. 네이버와 같은 복잡한 사이트는 Google PageSpeed Insights에서 분석하기 어려울 수 있습니다. 더 간단한 페이지나 모바일 전용 페이지(m.naver.com)를 시도해보세요.');
+      // Enhanced 504 error handling with helpful suggestions
+      if (response.status === 504) {
+        const suggestions = errorData.suggestions || [
+          '페이지를 새로고침하고 다시 시도',
+          '더 간단한 하위 페이지 분석',
+          '모바일 버전 사용 (예: m.example.com)',
+          '잠시 후 재시도'
+        ];
+        throw new Error(errorData.error || `분석 시간 초과: ${suggestions.join(', ')}`);
       }
       
       throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);

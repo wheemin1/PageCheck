@@ -89,12 +89,14 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
 
     console.log('Calling PageSpeed Insights API for:', url, 'with strategy:', strategy);
 
-    // Call PageSpeed Insights API with timeout handling
+    // Call PageSpeed Insights API with enhanced timeout handling
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 90000); // 90초 타임아웃
+    const timeoutId = setTimeout(() => controller.abort(), 120000); // 120초 타임아웃 (2분)
 
     let response;
     try {
+      console.log(`Starting analysis for ${url} - This may take up to 2 minutes for complex sites...`);
+      
       response = await fetch(apiUrl.toString(), {
         method: 'GET',
         headers: {
@@ -106,6 +108,7 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
       });
       
       clearTimeout(timeoutId);
+      console.log(`Analysis completed for ${url} with status:`, response.status);
     } catch (fetchError) {
       clearTimeout(timeoutId);
       
@@ -115,12 +118,19 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
           statusCode: 504,
           headers,
           body: JSON.stringify({ 
-            error: '페이지 분석 시간이 초과되었습니다. 네이버와 같은 복잡한 사이트는 분석에 시간이 오래 걸릴 수 있습니다.',
-            details: 'Request timeout after 90 seconds'
+            error: '분석 시간이 초과되었습니다 (2분). 복잡한 웹사이트는 분석하는 데 시간이 오래 걸릴 수 있습니다. 잠시 후 다시 시도하거나 더 간단한 페이지를 분석해보세요.',
+            details: `Request timeout after 120 seconds for ${url}`,
+            suggestions: [
+              '페이지를 새로고침하고 다시 시도',
+              '모바일 버전 페이지 사용 (예: m.example.com)',
+              '메인 페이지가 아닌 특정 하위 페이지 분석',
+              '잠시 후 재시도'
+            ]
           })
         };
       }
       
+      console.error('Fetch error for URL:', url, fetchError);
       throw fetchError; // Re-throw other errors
     }
 
