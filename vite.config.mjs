@@ -14,6 +14,8 @@ export default defineConfig({
     allowedHosts: 'all'
   },
   build: {
+    // 소스 맵 생성
+    sourcemap: true,
     rollupOptions: {
       output: {
         // CSS chunking 최적화 - 사용하지 않는 CSS preload 방지

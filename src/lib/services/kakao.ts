@@ -4,7 +4,50 @@ declare global {
   }
 }
 
-export function initKakao(): void {
+let kakaoInitialized = false;
+let kakaoLoading = false;
+
+// 동적으로 Kakao SDK 로드
+async function loadKakaoSDK(): Promise<void> {
+  if (typeof window === 'undefined') return Promise.resolve();
+  
+  return new Promise((resolve, reject) => {
+    if (window.Kakao) {
+      resolve();
+      return;
+    }
+
+    if (kakaoLoading) {
+      // 이미 로딩 중이면 잠시 기다린 후 재시도
+      setTimeout(() => {
+        if (window.Kakao) resolve();
+        else reject(new Error('Kakao SDK loading timeout'));
+      }, 3000);
+      return;
+    }
+
+    kakaoLoading = true;
+    const script = document.createElement('script');
+    script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js';
+    script.integrity = 'sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4';
+    script.crossOrigin = 'anonymous';
+    script.async = true; // 비동기 로드
+    
+    script.onload = () => {
+      kakaoLoading = false;
+      resolve();
+    };
+    
+    script.onerror = () => {
+      kakaoLoading = false;
+      reject(new Error('Failed to load Kakao SDK'));
+    };
+    
+    document.head.appendChild(script);
+  });
+}
+
+export async function initKakao(): Promise<void> {
   console.log('Initializing Kakao SDK...');
   
   if (typeof window === 'undefined') {
@@ -12,12 +55,18 @@ export function initKakao(): void {
     return;
   }
 
-  if (!window.Kakao) {
-    console.error('Kakao SDK not loaded');
+  if (kakaoInitialized) {
+    console.log('Kakao SDK already initialized');
     return;
   }
 
   try {
+    // SDK가 없으면 동적으로 로드
+    if (!window.Kakao) {
+      console.log('Loading Kakao SDK dynamically...');
+      await loadKakaoSDK();
+    }
+
     // Get API key from environment variable
     const APP_KEY = import.meta.env.VITE_KAKAO_APP_KEY;
     
@@ -36,14 +85,18 @@ export function initKakao(): void {
       return;
     }
 
+    
     if (!window.Kakao.isInitialized()) {
       window.Kakao.init(APP_KEY);
       console.log('Kakao SDK initialized with app key');
+      kakaoInitialized = true;
     } else {
       console.log('Kakao SDK already initialized');
+      kakaoInitialized = true;
     }
   } catch (error) {
     console.error('Kakao initialization error:', error);
+    throw error;
   }
 }
 
@@ -54,13 +107,18 @@ export async function shareToKakao(url: string, overallScore: number): Promise<v
     throw new Error('카카오톡 공유는 브라우저에서만 사용할 수 있습니다.');
   }
 
+  // Kakao SDK가 없으면 초기화 시도
   if (!window.Kakao) {
-    throw new Error('카카오톡 SDK가 로드되지 않았습니다. 페이지를 새로고침 해보세요.');
+    console.log('Kakao SDK not found, initializing...');
+    try {
+      await initKakao();
+    } catch (error) {
+      console.error('Failed to initialize Kakao SDK:', error);
+      throw new Error('카카오톡 SDK를 로드할 수 없습니다.');
+    }
   }
 
-  const APP_KEY = import.meta.env.VITE_KAKAO_APP_KEY;
-  
-  if (!APP_KEY || APP_KEY === 'your_javascript_key_here' || !window.Kakao.isInitialized()) {
+  const APP_KEY = import.meta.env.VITE_KAKAO_APP_KEY;  if (!APP_KEY || APP_KEY === 'your_javascript_key_here' || !window.Kakao.isInitialized()) {
     // Fallback: Copy to clipboard if no API key
     const shareUrl = window.location.href;
     const shareText = `🔍 MoCheck 성능 분석 결과\n\n📊 ${url}\n⭐ 종합 점수: ${overallScore}점\n\n자세한 결과 보기: ${shareUrl}`;
