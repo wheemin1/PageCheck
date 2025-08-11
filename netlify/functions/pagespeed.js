@@ -5,6 +5,9 @@ const { URL } = require('url');
 const API_KEY = 'AIzaSyBgFQm9iHA78OFQASVDQadu7ZrkoD5Fjv8';
 
 exports.handler = async (event, context) => {
+  console.log('=== PageSpeed Function Started ===');
+  console.log('Timestamp:', new Date().toISOString());
+  
   // CORS headers
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -15,6 +18,7 @@ exports.handler = async (event, context) => {
 
   // Handle preflight OPTIONS request
   if (event.httpMethod === 'OPTIONS') {
+    console.log('OPTIONS request handled');
     return {
       statusCode: 200,
       headers,
@@ -24,6 +28,8 @@ exports.handler = async (event, context) => {
 
   try {
     console.log('PageSpeed API function called');
+    console.log('HTTP Method:', event.httpMethod);
+    console.log('Query Parameters:', event.queryStringParameters);
     console.log('Event:', JSON.stringify(event, null, 2));
 
     const { url, strategy = 'mobile' } = event.queryStringParameters || {};
@@ -87,8 +93,12 @@ exports.handler = async (event, context) => {
     };
 
   } catch (error) {
-    console.error('Function error:', error);
-    console.error('Error stack:', error.stack);
+    console.error('=== FUNCTION ERROR ===');
+    console.error('Error Type:', error.constructor.name);
+    console.error('Error Message:', error.message);
+    console.error('Error Stack:', error.stack);
+    console.error('Error Code:', error.code);
+    console.error('=== END ERROR ===');
 
     return {
       statusCode: 500,
@@ -96,6 +106,8 @@ exports.handler = async (event, context) => {
       body: JSON.stringify({
         error: 'Internal server error',
         message: error.message,
+        type: error.constructor.name,
+        code: error.code || 'unknown',
         stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
       })
     };
