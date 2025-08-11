@@ -19,14 +19,6 @@
   onMount(async () => {
     await initI18n();
     initKakao();
-    
-    // Listen for analyze events from history modal
-    document.addEventListener('analyze', (event) => {
-      const { url, strategy } = event.detail;
-      appStore.setCurrentUrl(url);
-      appStore.setCurrentStrategy(strategy);
-      // Trigger URL analysis (this would normally be handled by UrlInput component)
-    });
   });
 
   $: results = $appStore.results;

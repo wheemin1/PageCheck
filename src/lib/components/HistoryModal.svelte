@@ -1,6 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { historyStore, favoritesStore, historyStats, getHistoryByDate, type HistoryEntry } from '../stores/history';
+  import { appStore } from '../stores/app';
+  import { analyzeSite } from '../services/pagespeed';
   import { t } from '../stores/i18n';
   
   export let showModal = false;
@@ -31,13 +33,57 @@
     return 'bg-red-100';
   }
   
-  function handleAnalyzeAgain(entry: HistoryEntry) {
-    // Emit event to parent to analyze the URL again
-    const event = new CustomEvent('analyze', { 
-      detail: { url: entry.url, strategy: entry.strategy } 
-    });
-    document.dispatchEvent(event);
-    showModal = false;
+  async function handleAnalyzeAgain(entry: HistoryEntry) {
+    try {
+      showModal = false;
+      
+      // Update app store with new URL and strategy
+      appStore.setCurrentUrl(entry.url);
+      appStore.setCurrentStrategy(entry.strategy);
+      appStore.setLoading(true);
+      appStore.setError(null);
+      
+      console.log('Starting re-analysis:', entry.url, entry.strategy);
+      
+      // Call the analysis service directly
+      const results = await analyzeSite(entry.url, entry.strategy);
+      
+      console.log('Re-analysis completed:', results);
+      
+      // Update the app store with results
+      appStore.setResults(results);
+      
+    } catch (error) {
+      console.error('Re-analysis failed:', error);
+      appStore.setError(error instanceof Error ? error.message : '분석 중 오류가 발생했습니다.');
+    } finally {
+      appStore.setLoading(false);
+    }
+  }
+
+  async function handleAnalyzeFavorite(url: string, strategy: 'mobile' | 'desktop' = 'mobile') {
+    try {
+      showModal = false;
+      
+      appStore.setCurrentUrl(url);
+      appStore.setCurrentStrategy(strategy);
+      appStore.setLoading(true);
+      appStore.setError(null);
+      
+      console.log('Starting favorite analysis:', url, strategy);
+      
+      const results = await analyzeSite(url, strategy);
+      
+      console.log('Favorite analysis completed:', results);
+      
+      appStore.setResults(results);
+      
+    } catch (error) {
+      console.error('Favorite analysis failed:', error);
+      appStore.setError(error instanceof Error ? error.message : '분석 중 오류가 발생했습니다.');
+    } finally {
+      appStore.setLoading(false);
+    }
   }
   
   function copyUrl(url: string) {
@@ -231,7 +277,7 @@
                   </div>
                   <div class="flex items-center gap-2 ml-4">
                     <button 
-                      on:click={() => handleAnalyzeAgain({ url: favorite.url, strategy: 'mobile' })}
+                      on:click={() => handleAnalyzeFavorite(favorite.url, 'mobile')}
                       class="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
                     >
                       분석하기

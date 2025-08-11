@@ -4,6 +4,36 @@ import type { PageSpeedResults, PageSpeedResponse } from '../types/pagespeed';
 
 const API_ENDPOINT = '/.netlify/functions/pagespeed';
 
+export async function analyzeSite(url: string, strategy: 'mobile' | 'desktop' = 'mobile'): Promise<PageSpeedResults> {
+  console.log('analyzeSite called with:', { url, strategy });
+  
+  try {
+    // Make API call
+    const response = await fetch(`${API_ENDPOINT}?url=${encodeURIComponent(url)}&strategy=${strategy}`, {
+      signal: AbortSignal.timeout(125000) // 125초
+    });
+    
+    console.log('API response status:', response.status);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('API error:', response.status, errorText);
+      throw new Error(`분석 요청이 실패했습니다 (${response.status}): ${errorText}`);
+    }
+
+    const data = await response.json();
+    console.log('API response received, processing...');
+    
+    return data;
+  } catch (error) {
+    console.error('analyzeSite error:', error);
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error('분석 중 알 수 없는 오류가 발생했습니다.');
+  }
+}
+
 export async function analyzeUrl(url: string, strategy: 'mobile' | 'desktop' = 'mobile'): Promise<void> {
   try {
     appStore.setLoading(true);
@@ -66,7 +96,7 @@ export async function analyzeUrl(url: string, strategy: 'mobile' | 'desktop' = '
     const results = processPageSpeedData(data);
     console.log('Processed Results:', results.scores);
     
-    appStore.setResults(results, false); // 항상 최신 데이터
+    appStore.setResults(results); // 항상 최신 데이터
   } catch (error) {
     console.error('PageSpeed analysis failed:', error);
     appStore.setError(error instanceof Error ? error.message : 'Unknown error occurred');
