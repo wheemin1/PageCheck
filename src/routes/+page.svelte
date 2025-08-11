@@ -3,6 +3,7 @@
   import { appStore } from '$lib/stores/app';
   import { initI18n, t, currentLang } from '$lib/stores/i18n';
   import { initKakao } from '$lib/services/kakao';
+  import { historyStore, favoritesStore } from '$lib/stores/history';
   
   import UrlInput from '$lib/components/UrlInput.svelte';
   import ScoreGauge from '$lib/components/ScoreGauge.svelte';
@@ -11,15 +12,31 @@
   import AuditTable from '$lib/components/AuditTable.svelte';
   import ExportButtons from '$lib/components/ExportButtons.svelte';
   import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
+  import HistoryModal from '$lib/components/HistoryModal.svelte';
+
+  let showHistoryModal = false;
 
   onMount(async () => {
     await initI18n();
     initKakao();
+    
+    // Listen for analyze events from history modal
+    document.addEventListener('analyze', (event) => {
+      const { url, strategy } = event.detail;
+      appStore.setCurrentUrl(url);
+      appStore.setCurrentStrategy(strategy);
+      // Trigger URL analysis (this would normally be handled by UrlInput component)
+    });
   });
 
   $: results = $appStore.results;
   $: loading = $appStore.loading;
   $: error = $appStore.error;
+
+  // Save results to history when new results are available
+  $: if (results) {
+    historyStore.addEntry(results);
+  }
 </script>
 
 <svelte:head>
@@ -40,8 +57,28 @@
           </p>
         </div>
         
-        <!-- Language Selector -->
+        <!-- Language Selector and History Button -->
         <div class="flex items-center space-x-3">
+          <!-- History Button -->
+          <button 
+            on:click={() => showHistoryModal = true}
+            class="flex items-center space-x-2 bg-white border border-gray-300 hover:border-gray-400 hover:bg-gray-50 px-4 py-2 rounded-lg shadow-sm transition-all duration-200 text-sm font-medium text-gray-700 hover:text-gray-900"
+            title="분석 기록 보기"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>기록</span>
+            {#if $historyStore.length > 0}
+              <span class="bg-blue-600 text-white text-xs rounded-full px-2 py-0.5 min-w-[20px] h-5 flex items-center justify-center font-semibold">
+                {$historyStore.length > 99 ? '99+' : $historyStore.length}
+              </span>
+            {/if}
+          </button>
+
+          <!-- Separator -->
+          <div class="w-px h-6 bg-gray-300"></div>
+
           <svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M7 2a1 1 0 011 1v1h3a1 1 0 110 2H9.578a18.87 18.87 0 01-1.724 4.78c.29.354.596.696.914 1.026a1 1 0 11-1.44 1.389c-.188-.196-.373-.396-.554-.6a19.098 19.098 0 01-3.107 3.567 1 1 0 01-1.334-1.49 17.087 17.087 0 003.13-3.733 18.992 18.992 0 01-1.487-2.494 1 1 0 111.79-.89c.234.47.489.928.764 1.372.417-.934.752-1.913.997-2.927H3a1 1 0 110-2h3V3a1 1 0 011-1zm6 6a1 1 0 01.894.553l2.991 5.982a.869.869 0 01.02.037l.99 1.98a1 1 0 11-1.79.895L15.383 16h-4.766l-.724 1.447a1 1 0 11-1.788-.894l.99-1.98.019-.038 2.99-5.982A1 1 0 0113 8zm-1.382 6h2.764L13 11.236 11.618 14z" clip-rule="evenodd"/>
           </svg>
@@ -149,8 +186,23 @@
         <!-- Score Overview -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-semibold text-gray-900">{$t('results.overview')}</h2>
+            <div class="flex-1">
+              <h2 class="text-xl font-semibold text-gray-900">{$t('results.overview')}</h2>
+              <p class="text-sm text-gray-500 mt-1 truncate">{results.url}</p>
+            </div>
             <div class="flex items-center space-x-2">
+              <!-- Favorite Button -->
+              <button 
+                on:click={() => favoritesStore.addFavorite(results.url)}
+                class="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-yellow-600 hover:bg-yellow-50 rounded-lg border border-gray-200 hover:border-yellow-200 transition-all"
+                title="즐겨찾기에 추가"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                </svg>
+                <span>즐겨찾기</span>
+              </button>
+              
               <!-- Real-time Analysis Badge -->
               <div class="flex items-center space-x-2 text-xs bg-blue-50 text-blue-700 px-3 py-1 rounded-full border border-blue-200">
                 <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
@@ -289,4 +341,7 @@
       </div>
     </div>
   </footer>
+
+  <!-- History Modal -->
+  <HistoryModal bind:showModal={showHistoryModal} />
 </main>
