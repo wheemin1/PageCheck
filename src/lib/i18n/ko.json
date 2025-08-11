@@ -1,4 +1,9 @@
 {
+  "meta": {
+    "title": "MoCheck - 10초 모바일 친화도 체커 | Google PageSpeed Insights 기반",
+    "description": "Google PageSpeed Insights 공식 API를 활용한 무료 웹사이트 성능 분석 도구. Core Web Vitals, 모바일 친화도, SEO 점수를 즉시 확인하세요.",
+    "keywords": "PageSpeed Insights, 웹사이트 성능, 모바일 친화도, SEO, Core Web Vitals, 웹사이트 최적화, 성능 분석"
+  },
   "header": {
     "subtitle": "10초 모바일 친화도 체커"
   },
@@ -44,7 +49,25 @@
     "noIssues": "개선이 필요한 항목이 없습니다."
   },
   "audits": {
-    "title": "상세 검사 결과"
+    "title": "상세 검사 결과",
+    "totalResults": "총 {count}개 결과",
+    "value": "값",
+    "details": "상세",
+    "description": "설명",
+    "detailsInfo": "세부 정보",
+    "noResults": "검색 조건에 맞는 결과가 없습니다.",
+    "expand": "펼치기",
+    "collapse": "접기",
+    "all": "전체",
+    "performance": "성능",
+    "accessibility": "접근성",
+    "bestPractices": "모범 사례",
+    "seo": "SEO",
+    "passed": "통과",
+    "failed": "실패",
+    "notApplicable": "해당없음",
+    "manual": "수동확인",
+    "informative": "정보제공"
   },
   "export": {
     "title": "결과 공유하기",

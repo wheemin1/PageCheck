@@ -1,4 +1,9 @@
 {
+  "meta": {
+    "title": "MoCheck - 10-Second Mobile Friendliness Checker | Google PageSpeed Insights Based",
+    "description": "Free website performance analysis tool using Google PageSpeed Insights official API. Check Core Web Vitals, mobile-friendliness, and SEO scores instantly.",
+    "keywords": "PageSpeed Insights, website performance, mobile friendliness, SEO, Core Web Vitals, website optimization, performance analysis"
+  },
   "header": {
     "subtitle": "10-Second Mobile Friendliness Checker"
   },
@@ -53,10 +58,17 @@
   "audits": {
     "title": "Detailed Audit Results",
     "subtitle": "Complete results from all performance, accessibility, SEO, and best practices audits",
+    "totalResults": "Total {count} results",
     "category": "Category",
     "audit": "Audit",
     "score": "Score",
     "value": "Value",
+    "details": "Details",
+    "description": "Description", 
+    "detailsInfo": "Detail Information",
+    "noResults": "No results match the search criteria.",
+    "expand": "Expand",
+    "collapse": "Collapse",
     "all": "All",
     "performance": "Performance",
     "accessibility": "Accessibility",
@@ -64,7 +76,9 @@
     "bestPractices": "Best Practices",
     "passed": "Passed",
     "failed": "Failed",
-    "notApplicable": "Not Applicable"
+    "notApplicable": "Not Applicable",
+    "manual": "Manual",
+    "informative": "Informative"
   },
   "export": {
     "title": "Export Results",
