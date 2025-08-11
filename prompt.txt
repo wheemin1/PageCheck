@@ -1,0 +1,294 @@
+# MoCheck - PageSpeed Insights 기반 웹사이트 성능 분석 도구
+
+## 📋 프로젝트 개요
+MoCheck은 Google PageSpeed Insights API를 활용한 글로벌 웹사이트 성능 분석 도구입니다.
+사용자가 웹사이트 URL을 입력하면 10초 내에 모바일 친화도, 접근성, SEO, 성능 점수를 분석하여 제공합니다.
+
+**배포 URL**: https://mocheck.netlify.app/
+**Repository**: https://github.com/wheemin1/PageCheck
+
+## 🛠 기술 스택
+### Frontend
+- **SvelteKit v2.27.0**: 메인 프레임워크
+- **TypeScript**: 타입 안전성
+- **Tailwind CSS**: 스타일링
+- **Vite v7.0.6**: 빌드 도구
+
+### Backend
+- **Netlify Functions**: 서버리스 백엔드
+- **Google PageSpeed Insights API v5**: 성능 분석
+- **Node.js HTTPS Module**: API 호출
+
+### 배포 및 호스팅
+- **Netlify**: 자동 배포
+- **GitHub Actions**: CI/CD 파이프라인
+
+### 라이브러리
+- **pdf-lib v1.17.1**: PDF 생성
+- **html-to-image**: 스크린샷 생성
+- **xlsx**: 엑셀 내보내기
+
+## 🌍 다국어 지원 (8개 언어)
+### URL 기반 다국어 라우팅
+```
+https://mocheck.netlify.app/         → 자동 언어 감지 후 리다이렉트
+https://mocheck.netlify.app/ko/      → 한국어 (기본값)
+https://mocheck.netlify.app/en/      → English (글로벌)
+https://mocheck.netlify.app/ja/      → 日本語
+https://mocheck.netlify.app/zh/      → 中文
+https://mocheck.netlify.app/es/      → Español
+https://mocheck.netlify.app/pt/      → Português
+https://mocheck.netlify.app/fr/      → Français
+https://mocheck.netlify.app/de/      → Deutsch
+```
+
+### 언어 감지 로직
+1. **서버사이드**: Accept-Language 헤더 분석
+2. **클라이언트사이드**: navigator.language 보완 감지
+3. **기본값**: 한국어 (한국 서비스)
+4. **SEO 최적화**: hreflang 태그 자동 생성
+
+## 🏗 프로젝트 구조
+```
+src/
+├── routes/
+│   ├── +page.ts                    # 루트 페이지 언어 감지 & 리다이렉트
+│   ├── +page.svelte                # 루트 페이지 로딩 화면
+│   └── [lang]/                     # 다국어 동적 라우팅
+│       ├── +layout.ts              # 언어별 레이아웃 로더
+│       ├── +layout.svelte          # 다국어 메타태그 & 레이아웃
+│       └── +page.svelte            # 메인 애플리케이션
+├── lib/
+│   ├── components/                 # UI 컴포넌트
+│   │   ├── UrlInput.svelte         # URL 입력 폼
+│   │   ├── ScoreGauge.svelte       # 점수 게이지 차트
+│   │   ├── CoreWebVitals.svelte    # Core Web Vitals 표시
+│   │   ├── ImprovementCards.svelte # 개선 제안 카드
+│   │   ├── AuditTable.svelte       # 상세 검사 결과 테이블
+│   │   ├── ExportButtons.svelte    # 내보내기 버튼
+│   │   ├── LoadingSpinner.svelte   # 로딩 스피너
+│   │   └── HistoryModal.svelte     # 분석 기록 모달
+│   ├── services/
+│   │   ├── pagespeed.ts            # PageSpeed API 서비스
+│   │   ├── export.ts               # 파일 내보내기 서비스
+│   │   └── kakao.ts                # 카카오톡 공유
+│   ├── stores/
+│   │   ├── app.ts                  # 앱 상태 관리
+│   │   ├── i18n.ts                 # 다국어 상태 관리
+│   │   └── history.ts              # 분석 기록 관리
+│   ├── types/
+│   │   └── pagespeed.ts            # TypeScript 타입 정의
+│   ├── utils/
+│   │   ├── cache.ts                # 캐시 유틸리티
+│   │   ├── format.ts               # 포맷팅 유틸리티
+│   │   └── score.ts                # 점수 계산 유틸리티
+│   └── i18n/                       # 다국어 번역 파일
+│       ├── ko.json                 # 한국어
+│       ├── en.json                 # 영어
+│       ├── ja.json                 # 일본어
+│       ├── zh.json                 # 중국어
+│       ├── es.json                 # 스페인어
+│       ├── pt.json                 # 포르투갈어
+│       ├── fr.json                 # 프랑스어
+│       └── de.json                 # 독일어
+└── netlify/
+    └── functions/
+        └── pagespeed.ts            # Netlify Functions API
+```
+
+## 🔧 주요 기능
+### 1. 웹사이트 성능 분석
+- **Google PageSpeed Insights API v5** 사용
+- **모바일/데스크톱** 분석 지원
+- **4가지 카테고리**: 성능, 접근성, SEO, 모범사례
+- **Core Web Vitals**: LCP, FID, CLS 측정
+
+### 2. 분석 결과 시각화
+- **점수 게이지**: 색상별 점수 표시
+- **개선 제안**: 우선순위별 최적화 방안
+- **상세 검사**: 모든 Lighthouse 감사 항목
+- **실시간 데이터**: Chrome UX Report 기반
+
+### 3. 데이터 내보내기
+- **PDF 보고서**: 전체 분석 결과
+- **PNG 이미지**: 스크린샷 저장
+- **Excel 파일**: 데이터 분석용
+- **JSON 데이터**: 개발자용 원시 데이터
+
+### 4. 분석 기록 관리
+- **로컬 스토리지**: 브라우저 기반 저장
+- **즐겨찾기**: 자주 분석하는 사이트
+- **재분석**: 기록에서 바로 재분석
+- **통계**: 분석 횟수 및 평균 점수
+
+### 5. 소셜 공유
+- **카카오톡 공유**: 한국 사용자 맞춤
+- **URL 공유**: 언어별 직접 링크
+- **Open Graph**: SNS 최적화 메타태그
+
+## 🔑 API 및 환경 설정
+### Google PageSpeed Insights API
+```javascript
+API_KEY: AIzaSyBgFQm9iHA78OFQASVDQadu7ZrkoD5Fjv8
+Endpoint: https://www.googleapis.com/pagespeedonline/v5/runPagespeed
+Categories: performance, accessibility, best-practices, seo
+Locale: ko (한국어 결과)
+```
+
+### Netlify Functions 설정
+```javascript
+// netlify/functions/pagespeed.ts
+- Node.js 18 런타임
+- TypeScript 지원
+- CORS 헤더 설정
+- 2분 타임아웃
+- 포괄적 오류 처리
+```
+
+## 📊 성능 최적화
+### 빌드 최적화
+- **코드 분할**: 동적 import 사용
+- **트리 쉐이킹**: 사용하지 않는 코드 제거
+- **압축**: Gzip 압축 적용
+- **캐싱**: 정적 자원 캐시 최적화
+
+### 런타임 최적화
+- **지연 로딩**: 이미지 및 컴포넌트 레이지 로딩
+- **메모이제이션**: 반복 계산 방지
+- **디바운싱**: API 호출 최적화
+- **로컬 캐시**: 분석 결과 임시 저장
+
+## 🌐 SEO 및 접근성
+### 다국어 SEO
+```html
+<!-- 언어별 메타태그 -->
+<meta name="description" content="언어별 설명" />
+<meta property="og:title" content="언어별 제목" />
+<link rel="alternate" hreflang="ko" href="/ko/" />
+<link rel="alternate" hreflang="en" href="/en/" />
+<link rel="canonical" href="현재언어URL" />
+```
+
+### 접근성 준수
+- **키보드 네비게이션**: 모든 기능 키보드 접근 가능
+- **스크린 리더**: ARIA 라벨 적용
+- **색상 대비**: WCAG 2.1 AA 준수
+- **포커스 관리**: 명확한 포커스 표시
+
+## 🚀 배포 및 운영
+### 자동 배포 파이프라인
+```yaml
+1. Git Push to main branch
+2. GitHub Webhook → Netlify
+3. Build Process (npm run build)
+4. Deploy to CDN
+5. Cache Invalidation
+```
+
+### 모니터링
+- **Netlify Analytics**: 트래픽 분석
+- **Error Tracking**: 오류 모니터링
+- **Performance Monitoring**: 페이지 성능 추적
+- **API Usage**: Google API 사용량 모니터링
+
+## 🔧 개발 환경 설정
+### 로컬 개발
+```bash
+# 의존성 설치
+npm install
+
+# 개발 서버 실행
+npm run dev
+
+# 빌드
+npm run build
+
+# 프리뷰
+npm run preview
+```
+
+### 환경 변수
+```bash
+# .env.local
+PSI_API_KEY=AIzaSyBgFQm9iHA78OFQASVDQadu7ZrkoD5Fjv8
+KAKAO_APP_KEY=카카오앱키
+```
+
+## 🐛 문제 해결
+### 자주 발생하는 문제
+1. **500 서버 오류**: Accept-Language 헤더 파싱 오류
+2. **빈 페이지**: +page.ts 파일 누락
+3. **언어 감지 실패**: 브라우저 언어 설정 확인
+4. **API 오류**: Google API 키 및 할당량 확인
+
+### 디버깅 도구
+```javascript
+// 언어 감지 디버깅
+console.log('Accept-Language:', acceptLanguage);
+console.log('Detected language:', detectedLang);
+
+// API 응답 디버깅
+console.log('API response status:', response.status);
+console.log('API response data:', data);
+```
+
+## 📈 향후 개선 계획
+### 기능 확장
+- [ ] 사용자 계정 시스템
+- [ ] 팀 협업 기능
+- [ ] API 키 개인화
+- [ ] 모바일 앱 버전
+
+### 성능 개선
+- [ ] Server-Side Rendering 최적화
+- [ ] Edge Computing 적용
+- [ ] 실시간 알림 시스템
+- [ ] 배치 분석 기능
+
+### 다국어 확장
+- [ ] 아랍어 지원
+- [ ] 러시아어 지원
+- [ ] 인도네시아어 지원
+- [ ] 태국어 지원
+
+## 📱 반응형 디자인
+### 브레이크포인트
+```css
+sm: 640px   /* 모바일 */
+md: 768px   /* 태블릿 */
+lg: 1024px  /* 데스크톱 */
+xl: 1280px  /* 대형 데스크톱 */
+```
+
+### 모바일 최적화
+- **터치 인터페이스**: 44px 이상 터치 타겟
+- **스와이프 제스처**: 모달 및 카드 네비게이션
+- **오프라인 지원**: Service Worker 적용 예정
+- **PWA**: Progressive Web App 기능
+
+## 🔒 보안
+### API 보안
+- **CORS 정책**: 허용된 도메인만 접근
+- **Rate Limiting**: API 호출 제한
+- **Input Validation**: URL 형식 검증
+- **XSS 방지**: 사용자 입력 이스케이프
+
+### 데이터 보안
+- **로컬 스토리지**: 민감 정보 제외
+- **HTTPS**: 모든 통신 암호화
+- **CSP**: Content Security Policy 적용
+- **의존성 보안**: 정기적인 보안 업데이트
+
+## 📄 라이선스 및 저작권
+```
+© 2025 MoCheck. Made with ❤️ using Google's official web performance tools
+
+이 도구는 Google의 공식 PageSpeed Insights API와 동일한 엔진을 사용하여 
+웹사이트 성능을 정확하게 측정합니다.
+```
+
+---
+
+**최종 업데이트**: 2025년 8월 11일
+**버전**: v2.0.0 (다국어 글로벌 서비스)
+**개발자**: wheemin1
