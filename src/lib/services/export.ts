@@ -31,6 +31,11 @@ export async function exportToPDF(results: PageSpeedResults): Promise<void> {
   try {
     console.log('Starting PDF export with results:', results);
     
+    // Check if results has required properties
+    if (!results.url || !results.scores || !results.coreWebVitals) {
+      throw new Error('분석 결과 데이터가 불완전합니다.');
+    }
+    
     const pdfDoc = await PDFDocument.create();
     console.log('PDF document created');
     
@@ -60,7 +65,11 @@ export async function exportToPDF(results: PageSpeedResults): Promise<void> {
       color: rgb(0.3, 0.3, 0.3)
     });
     
-    page1.drawText(`분석 일시: ${results.timestamp.toLocaleString('ko-KR')}`, {
+    const timestamp = results.timestamp instanceof Date 
+      ? results.timestamp 
+      : new Date(results.timestamp);
+    
+    page1.drawText(`분석 일시: ${timestamp.toLocaleString('ko-KR')}`, {
       x: 50,
       y: height - 110,
       size: 12,
@@ -68,8 +77,8 @@ export async function exportToPDF(results: PageSpeedResults): Promise<void> {
       color: rgb(0.3, 0.3, 0.3)
     });
     
-    // Calculate overall score
-    const overallScore = Math.round(
+    // Calculate overall score safely
+    const overallScore = results.overallScore || Math.round(
       (results.scores.performance + results.scores.accessibility + results.scores.seo + results.scores.bestPractices) / 4
     );
     
@@ -85,10 +94,10 @@ export async function exportToPDF(results: PageSpeedResults): Promise<void> {
     // Category Scores
     let yPos = height - 200;
     const categories = [
-      { label: '성능 (Performance)', score: results.scores.performance },
-      { label: '접근성 (Accessibility)', score: results.scores.accessibility },
-      { label: 'SEO', score: results.scores.seo },
-      { label: '모범 사례 (Best Practices)', score: results.scores.bestPractices }
+      { label: '성능 (Performance)', score: results.scores.performance || 0 },
+      { label: '접근성 (Accessibility)', score: results.scores.accessibility || 0 },
+      { label: 'SEO', score: results.scores.seo || 0 },
+      { label: '모범 사례 (Best Practices)', score: results.scores.bestPractices || 0 }
     ];
     
     categories.forEach(category => {
@@ -114,9 +123,18 @@ export async function exportToPDF(results: PageSpeedResults): Promise<void> {
     
     yPos -= 30;
     const vitals = [
-      { label: 'LCP (Largest Contentful Paint)', value: results.coreWebVitals.lcp.displayValue },
-      { label: 'FID (First Input Delay)', value: results.coreWebVitals.fid.displayValue },
-      { label: 'CLS (Cumulative Layout Shift)', value: results.coreWebVitals.cls.displayValue }
+      { 
+        label: 'LCP (Largest Contentful Paint)', 
+        value: results.coreWebVitals?.lcp?.displayValue || 'N/A' 
+      },
+      { 
+        label: 'FID (First Input Delay)', 
+        value: results.coreWebVitals?.fid?.displayValue || 'N/A' 
+      },
+      { 
+        label: 'CLS (Cumulative Layout Shift)', 
+        value: results.coreWebVitals?.cls?.displayValue || 'N/A' 
+      }
     ];
     
     vitals.forEach(vital => {
@@ -132,69 +150,78 @@ export async function exportToPDF(results: PageSpeedResults): Promise<void> {
     
     console.log('Page 1 content added');
     
-    // Page 2: Detailed Audits
-    const page2 = pdfDoc.addPage([595, 842]);
-    page2.drawText('상세 감사 결과', {
-      x: 50,
-      y: height - 60,
-      size: 20,
-      font: boldFont,
-      color: rgb(0.1, 0.1, 0.1)
-    });
-    
-    yPos = height - 100;
-    const auditsByCategory = results.audits.reduce((acc, audit) => {
-      if (!acc[audit.category]) acc[audit.category] = [];
-      acc[audit.category].push(audit);
-      return acc;
-    }, {} as Record<string, typeof results.audits>);
-    
-    Object.entries(auditsByCategory).forEach(([category, audits]) => {
-      if (yPos < 100) return; // Stop if running out of space
-      
-      page2.drawText(getCategoryDisplayName(category), {
+    // Only add page 2 if audits exist
+    if (results.audits && results.audits.length > 0) {
+      // Page 2: Detailed Audits
+      const page2 = pdfDoc.addPage([595, 842]);
+      page2.drawText('상세 감사 결과', {
         x: 50,
-        y: yPos,
-        size: 14,
+        y: height - 60,
+        size: 20,
         font: boldFont,
         color: rgb(0.1, 0.1, 0.1)
       });
-      yPos -= 25;
       
-      audits.slice(0, 5).forEach(audit => {
-        if (yPos < 80) return;
+      yPos = height - 100;
+      const auditsByCategory = results.audits.reduce((acc, audit) => {
+        if (!acc[audit.category]) acc[audit.category] = [];
+        acc[audit.category].push(audit);
+        return acc;
+      }, {} as Record<string, typeof results.audits>);
+      
+      Object.entries(auditsByCategory).forEach(([category, audits]) => {
+        if (yPos < 100) return; // Stop if running out of space
         
-        const status = audit.score === null ? 'N/A' : 
-                      audit.score >= 0.9 ? '통과' : 
-                      audit.score >= 0.5 ? '경고' : '실패';
-        
-        page2.drawText(`• ${audit.title}: ${status}`, {
-          x: 70,
+        page2.drawText(getCategoryDisplayName(category), {
+          x: 50,
           y: yPos,
-          size: 10,
-          font: font,
-          color: rgb(0.3, 0.3, 0.3)
+          size: 14,
+          font: boldFont,
+          color: rgb(0.1, 0.1, 0.1)
         });
-        yPos -= 18;
+        yPos -= 25;
+        
+        audits.slice(0, 5).forEach(audit => {
+          if (yPos < 80) return;
+          
+          const status = audit.score === null ? 'N/A' : 
+                        audit.score >= 0.9 ? '통과' : 
+                        audit.score >= 0.5 ? '경고' : '실패';
+          
+          page2.drawText(`• ${audit.title}: ${status}`, {
+            x: 70,
+            y: yPos,
+            size: 10,
+            font: font,
+            color: rgb(0.3, 0.3, 0.3)
+          });
+          yPos -= 18;
+        });
+        yPos -= 10;
       });
-      yPos -= 10;
-    });
-    
-    console.log('Page 2 content added');
+      
+      console.log('Page 2 content added');
+    }
     
     const pdfBytes = await pdfDoc.save();
     console.log('PDF bytes generated, size:', pdfBytes.length);
     
     // Create download
-    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+    const blob = new Blob([new Uint8Array(pdfBytes)], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.download = `mocheck-results-${Date.now()}.pdf`;
     link.href = url;
+    link.style.display = 'none';
+    
+    // Add to DOM to ensure it works in all browsers
+    document.body.appendChild(link);
     
     console.log('Triggering PDF download:', link.download);
     link.click();
     
+    // Clean up
+    document.body.removeChild(link);
     URL.revokeObjectURL(url);
     console.log('PDF export completed successfully');
   } catch (error) {

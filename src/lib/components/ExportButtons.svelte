@@ -26,13 +26,24 @@
 
   async function handlePDFExport() {
     const results = $appStore.results;
-    if (!results) return;
+    console.log('PDF Export - Results:', results);
+    
+    if (!results) {
+      console.error('No results available for PDF export');
+      alert($t('export.noResults'));
+      return;
+    }
 
     try {
       loading.pdf = true;
+      console.log('Starting PDF export...');
       await exportToPDF(results);
+      console.log('PDF export completed successfully');
     } catch (error) {
-      alert(error instanceof Error ? error.message : $t('export.pdfError'));
+      console.error('PDF export error:', error);
+      console.error('Error stack:', error.stack);
+      const errorMessage = error instanceof Error ? error.message : $t('export.pdfError');
+      alert(`PDF 내보내기 실패: ${errorMessage}`);
     } finally {
       loading.pdf = false;
     }
