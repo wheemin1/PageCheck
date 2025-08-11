@@ -67,37 +67,14 @@ exports.handler = async (event, context) => {
 
     console.log(`Analyzing URL: ${url} with strategy: ${strategy}`);
 
-    // Build Google PageSpeed Insights API URL
-    const apiUrl = `https://www.googleapis.com/pagespeed/v5/runPagespeed?url=${encodeURIComponent(url)}&strategy=${strategy}&key=${API_KEY}`;
+    // Build Google PageSpeed Insights API URL - 올바른 엔드포인트
+    const apiUrl = `https://www.googleapis.com/pagespeed/v5/runPagespeed?url=${encodeURIComponent(url)}&strategy=${strategy}&key=${API_KEY}&category=performance&category=accessibility&category=best-practices&category=seo`;
     
     console.log('API URL:', apiUrl.replace(API_KEY, '[REDACTED]'));
 
-    // Call Google PageSpeed Insights API
-    const response = await fetch(apiUrl, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'User-Agent': 'MoCheck/1.0'
-      }
-    });
+    // Call Google PageSpeed Insights API using https module
+    const data = await callGoogleAPI(apiUrl);
 
-    console.log('Google API Response Status:', response.status);
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Google API Error:', response.status, errorText);
-      
-      return {
-        statusCode: response.status,
-        headers,
-        body: JSON.stringify({
-          error: `Google API Error: ${response.status}`,
-          details: errorText
-        })
-      };
-    }
-
-    const data = await response.json();
     console.log('API call successful, data length:', JSON.stringify(data).length);
 
     // Transform the data for our frontend
@@ -124,6 +101,64 @@ exports.handler = async (event, context) => {
     };
   }
 };
+
+// Helper function to make HTTPS requests
+function callGoogleAPI(apiUrl) {
+  return new Promise((resolve, reject) => {
+    const parsedUrl = new URL(apiUrl);
+    
+    const options = {
+      hostname: parsedUrl.hostname,
+      path: parsedUrl.pathname + parsedUrl.search,
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'MoCheck/1.0'
+      },
+      timeout: 120000 // 2분 타임아웃
+    };
+
+    console.log('Making HTTPS request to:', parsedUrl.hostname + parsedUrl.pathname);
+
+    const req = https.request(options, (res) => {
+      console.log('Google API Response Status:', res.statusCode);
+      
+      let data = '';
+      
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+      
+      res.on('end', () => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          try {
+            const jsonData = JSON.parse(data);
+            resolve(jsonData);
+          } catch (parseError) {
+            console.error('JSON Parse Error:', parseError);
+            reject(new Error('Failed to parse API response'));
+          }
+        } else {
+          console.error('Google API Error:', res.statusCode, data);
+          reject(new Error(`Google API Error: ${res.statusCode} - ${data}`));
+        }
+      });
+    });
+
+    req.on('error', (error) => {
+      console.error('Request Error:', error);
+      reject(error);
+    });
+
+    req.on('timeout', () => {
+      console.error('Request Timeout');
+      req.destroy();
+      reject(new Error('Request timeout'));
+    });
+
+    req.end();
+  });
+}
 
 function transformPageSpeedData(data, url, strategy) {
   try {
