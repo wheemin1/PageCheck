@@ -6,8 +6,8 @@ const SUPPORTED_LANGUAGES = ['ko', 'en', 'ja', 'zh', 'es', 'pt', 'fr', 'de'];
 export const GET: RequestHandler = async () => {
 	const currentDate = new Date().toISOString().split('T')[0];
 	
-	// Simple sitemap structure without hreflang for now
-	let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n';
+	// Build standard sitemap XML content
+	let xmlContent = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n';
 	xmlContent += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
 	
 	// Add each language page as a simple URL entry
@@ -20,11 +20,12 @@ export const GET: RequestHandler = async () => {
 		xmlContent += '  </url>\n';
 	}
 	
-	xmlContent += '</urlset>';
+	xmlContent += '</urlset>\n';
 
 	return new Response(xmlContent, {
 		headers: {
 			'Content-Type': 'application/xml; charset=utf-8',
+			'X-Robots-Tag': 'noindex',
 			'Cache-Control': 'public, max-age=3600'
 		}
 	});
