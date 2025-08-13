@@ -2,15 +2,15 @@ import { appStore } from '../stores/app';
 import { calculateOverallScore } from '../utils/score';
 import type { PageSpeedResults, PageSpeedResponse } from '../types/pagespeed';
 
-const API_ENDPOINT = '/.netlify/functions/pagespeed';
+const API_ENDPOINT = 'https://pagespeed-analysis-804274703446.asia-northeast3.run.app';
 
 export async function analyzeSite(url: string, strategy: 'mobile' | 'desktop' = 'mobile'): Promise<PageSpeedResults> {
   console.log('analyzeSite called with:', { url, strategy });
   
   try {
-    // Make API call
+    // Make API call with extended timeout for Google Cloud Run
     const response = await fetch(`${API_ENDPOINT}?url=${encodeURIComponent(url)}&strategy=${strategy}`, {
-      signal: AbortSignal.timeout(125000) // 125초
+      signal: AbortSignal.timeout(480000) // 8분 (Cloud Run은 9분 한도)
     });
     
     console.log('API response status:', response.status);
@@ -46,26 +46,26 @@ export async function analyzeUrl(url: string, strategy: 'mobile' | 'desktop' = '
     const isComplexDomain = complexDomains.some(domain => url.includes(domain));
     
     if (isComplexDomain) {
-      appStore.setError('⏰ 복잡한 웹사이트를 분석 중입니다... 최대 2분까지 소요될 수 있습니다. 잠시만 기다려주세요.');
+      appStore.setError('⏰ 복잡한 웹사이트를 분석 중입니다... 최대 8분까지 소요될 수 있습니다. 잠시만 기다려주세요.');
       // Show countdown timer for user feedback
-      let seconds = 120;
+      let seconds = 480; // 8분
       const countdownInterval = setInterval(() => {
-        seconds -= 10;
+        seconds -= 30; // 30초마다 업데이트
         if (seconds > 0) {
-          appStore.setError(`⏰ 분석 중... 최대 ${Math.ceil(seconds/60)}분 더 소요될 수 있습니다. (남은 시간: ${seconds}초)`);
+          appStore.setError(`⏰ 분석 중... 최대 ${Math.ceil(seconds/60)}분 더 소요될 수 있습니다. (남은 시간: ${Math.floor(seconds/60)}분 ${seconds%60}초)`);
         } else {
           clearInterval(countdownInterval);
         }
-      }, 10000);
+      }, 30000);
       
       // Clear countdown on completion or error
-      setTimeout(() => clearInterval(countdownInterval), 120000);
+      setTimeout(() => clearInterval(countdownInterval), 480000);
     }
 
-    // Make API call with longer timeout expectation
+    // Make API call with extended timeout for Google Cloud Run
     const response = await fetch(`${API_ENDPOINT}?url=${encodeURIComponent(url)}&strategy=${strategy}`, {
       // Frontend timeout slightly longer than backend
-      signal: AbortSignal.timeout(125000) // 125초 = 2분 5초
+      signal: AbortSignal.timeout(480000) // 8분
     });
     
     if (!response.ok) {
@@ -77,9 +77,9 @@ export async function analyzeUrl(url: string, strategy: 'mobile' | 'desktop' = '
           '페이지를 새로고침하고 다시 시도',
           '더 간단한 하위 페이지 분석',
           '모바일 버전 사용 (예: m.example.com)',
-          '잠시 후 재시도'
+          '잠시 후 재시도 (Google Cloud Run 9분 한도)'
         ];
-        throw new Error(errorData.error || `분석 시간 초과: ${suggestions.join(', ')}`);
+        throw new Error(errorData.error || `분석 시간 초과 (8분 한도): ${suggestions.join(', ')}`);
       }
       
       throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
