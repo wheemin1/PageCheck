@@ -12,7 +12,12 @@ interface PageSpeedAPIResponse {
 
 const handler: Handler = async (event: HandlerEvent, context: HandlerContext) => {
   const startTime = Date.now();
-  console.log(`Function started at ${new Date().toISOString()}`);
+  console.log(`Function started at ${new Date().toISOString()} - Netlify limit: 26 seconds`);
+  
+  // Add a safety timeout for the entire function (20 seconds to be safe)
+  const functionTimeout = setTimeout(() => {
+    console.error('Function approaching Netlify 26s limit - forcing early return');
+  }, 20000);
   
   // CORS headers
   const headers = {
@@ -73,47 +78,43 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
       };
     }
 
-    // Build PageSpeed Insights API URL
+    // Build ultra-optimized PageSpeed Insights API URL for minimal analysis time
     const apiUrl = new URL('https://www.googleapis.com/pagespeedonline/v5/runPagespeed');
     apiUrl.searchParams.set('url', url);
     apiUrl.searchParams.set('key', API_KEY);
     apiUrl.searchParams.set('strategy', strategy);
     
-    // Add categories using append() to include multiple values
+    // Minimal categories for fastest analysis
     apiUrl.searchParams.append('category', 'performance');
-    apiUrl.searchParams.append('category', 'accessibility');
-    apiUrl.searchParams.append('category', 'best-practices');
-    apiUrl.searchParams.append('category', 'seo');
     
-    // Add locale for consistent results
-    apiUrl.searchParams.set('locale', 'ko');
+    // Speed optimizations
+    apiUrl.searchParams.set('locale', 'en'); // English is faster than Korean
+    apiUrl.searchParams.set('snapshots', 'false'); // No screenshots
     
-    console.log('API URL:', apiUrl.toString());
+    console.log('Ultra-optimized API URL (targeting <10s):', apiUrl.toString());
 
     console.log('Calling PageSpeed Insights API for:', url, 'with strategy:', strategy);
 
-    // Enhanced API call with retry logic and faster timeouts
+    // Ultra-fast API call optimized for Netlify Functions 26s limit
     const makeRequestWithRetry = async (maxRetries = 2): Promise<Response> => {
       let lastError: Error | null = null;
       
       for (let attempt = 1; attempt <= maxRetries; attempt++) {
-        let timeoutMs = Math.min(60000 + (attempt * 30000), 120000);
+        // Ultra-aggressive timeouts: 8s, 12s to stay well under 26s Netlify limit
+        let timeoutMs = Math.min(6000 + (attempt * 4000), 12000);
         
         try {
-          console.log(`Attempt ${attempt}/${maxRetries} for ${url}`);
+          console.log(`Attempt ${attempt}/${maxRetries} for ${url} - Timeout: ${timeoutMs}ms (Netlify limit: 26s)`);
           
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
           
-          console.log(`Starting analysis for ${url} - Timeout: ${timeoutMs/1000}s`);
-          
           const response = await fetch(apiUrl.toString(), {
             method: 'GET',
             headers: {
-              'User-Agent': 'Mozilla/5.0 (compatible; PageSpeed Analysis Tool)',
+              'User-Agent': 'Mozilla/5.0 (compatible; Fast PageSpeed Tool)',
               'Accept': 'application/json',
-              'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8',
-              'Connection': 'keep-alive'
+              'Accept-Encoding': 'gzip, deflate'
             },
             signal: controller.signal
           });
@@ -122,43 +123,41 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
           console.log(`Analysis completed for ${url} with status:`, response.status);
           
           if (response.ok) {
-            return response; // Success - return immediately
+            return response;
           }
           
-          // If not ok, treat as error for retry logic
+          const errorText = await response.text().catch(() => 'Unable to read response');
+          console.error(`HTTP ${response.status} response:`, errorText);
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           
         } catch (fetchError) {
           lastError = fetchError as Error;
           
           if (lastError.name === 'AbortError') {
-            console.error(`PageSpeed API timeout on attempt ${attempt} for URL:`, url);
+            console.error(`Timeout after ${timeoutMs}ms on attempt ${attempt}`);
             
             if (attempt === maxRetries) {
-              throw new Error(`분석 시간이 초과되었습니다 (${timeoutMs/1000}초). 복잡한 웹사이트이거나 Google 서버가 바쁠 수 있습니다. 잠시 후 다시 시도해주세요.`);
+              throw new Error(`PageSpeed 분석이 ${timeoutMs/1000}초 내에 완료되지 않았습니다. 사이트가 복잡하거나 Google 서버가 바쁠 수 있습니다.`);
             }
           } else {
-            console.error(`Attempt ${attempt} failed for ${url}:`, lastError.message);
+            console.error(`Attempt ${attempt} failed:`, lastError.message);
             
-            // For API rate limit errors, wait longer
-            if (lastError.message.includes('429') || lastError.message.includes('quota')) {
-              console.log('Rate limit detected, waiting longer...');
-              await new Promise(resolve => setTimeout(resolve, 5000 * attempt));
-              continue;
+            // Handle specific API errors
+            if (lastError.message.includes('429')) {
+              throw new Error('Google API 요청 한도를 초과했습니다. 잠시 후 다시 시도해주세요.');
             }
           }
           
           if (attempt < maxRetries) {
-            // Shorter wait time for faster recovery
-            const waitTime = 1000 * attempt; // 1s, 2s
-            console.log(`Waiting ${waitTime}ms before retry...`);
+            // Very short wait - we need to finish within 26 seconds total
+            const waitTime = 500; // Fixed 500ms wait
+            console.log(`Quick retry in ${waitTime}ms...`);
             await new Promise(resolve => setTimeout(resolve, waitTime));
           }
         }
       }
       
-      // All attempts failed
-      throw lastError || new Error('All retry attempts failed');
+      throw lastError || new Error('All attempts failed within Netlify timeout limits');
     };
 
     let response: Response;
@@ -225,6 +224,7 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
     console.log('Successfully fetched PageSpeed data for:', url);
     const totalTime = Date.now() - startTime;
     console.log(`Function completed in ${totalTime}ms`);
+    clearTimeout(functionTimeout);
 
     return {
       statusCode: 200,
@@ -238,6 +238,25 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
   } catch (error) {
     const totalTime = Date.now() - startTime;
     console.error(`PageSpeed function error after ${totalTime}ms:`, error);
+    clearTimeout(functionTimeout);
+    
+    // Check if we're approaching Netlify's 26-second limit
+    if (totalTime > 18000) {
+      return {
+        statusCode: 504,
+        headers,
+        body: JSON.stringify({ 
+          error: 'Netlify Function timeout limit approaching',
+          message: `분석이 Netlify 제한 시간(26초)에 근접했습니다 (${totalTime}ms). 더 간단한 사이트를 분석하거나 잠시 후 다시 시도해주세요.`,
+          executionTime: `${totalTime}ms`,
+          suggestions: [
+            '메인 페이지가 아닌 특정 페이지를 분석해보세요',
+            '모바일 버전을 시도해보세요',
+            '잠시 후 다시 시도해주세요'
+          ]
+        })
+      };
+    }
     
     return {
       statusCode: 500,
