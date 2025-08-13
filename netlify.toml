@@ -13,6 +13,9 @@
 
 [functions]
   node_bundler = "esbuild"
+  
+[functions."pagespeed"]
+  timeout = 900  # 15 minutes (maximum allowed)
 
 [[headers]]
   for = "/*"

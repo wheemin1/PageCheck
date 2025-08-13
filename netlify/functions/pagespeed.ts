@@ -11,6 +11,9 @@ interface PageSpeedAPIResponse {
 }
 
 const handler: Handler = async (event: HandlerEvent, context: HandlerContext) => {
+  const startTime = Date.now();
+  console.log(`Function started at ${new Date().toISOString()}`);
+  
   // CORS headers
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -89,27 +92,28 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
 
     console.log('Calling PageSpeed Insights API for:', url, 'with strategy:', strategy);
 
-    // Enhanced API call with retry logic
+    // Enhanced API call with retry logic and faster timeouts
     const makeRequestWithRetry = async (maxRetries = 2): Promise<Response> => {
       let lastError: Error | null = null;
       
       for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        let timeoutMs = Math.min(60000 + (attempt * 30000), 120000);
+        
         try {
           console.log(`Attempt ${attempt}/${maxRetries} for ${url}`);
           
           const controller = new AbortController();
-          // Progressive timeout: 2min for first attempt, 3min for retries
-          const timeoutMs = attempt === 1 ? 120000 : 180000;
           const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
           
-          console.log(`Starting analysis for ${url} - This may take up to ${timeoutMs/60000} minutes for complex sites...`);
+          console.log(`Starting analysis for ${url} - Timeout: ${timeoutMs/1000}s`);
           
           const response = await fetch(apiUrl.toString(), {
             method: 'GET',
             headers: {
               'User-Agent': 'Mozilla/5.0 (compatible; PageSpeed Analysis Tool)',
               'Accept': 'application/json',
-              'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8'
+              'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8',
+              'Connection': 'keep-alive'
             },
             signal: controller.signal
           });
@@ -131,15 +135,22 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
             console.error(`PageSpeed API timeout on attempt ${attempt} for URL:`, url);
             
             if (attempt === maxRetries) {
-              throw new Error(`분석 시간이 초과되었습니다 (${attempt === 1 ? '2분' : '3분'}). 복잡한 웹사이트는 분석하는 데 시간이 오래 걸릴 수 있습니다. 잠시 후 다시 시도하거나 더 간단한 페이지를 분석해보세요.`);
+              throw new Error(`분석 시간이 초과되었습니다 (${timeoutMs/1000}초). 복잡한 웹사이트이거나 Google 서버가 바쁠 수 있습니다. 잠시 후 다시 시도해주세요.`);
             }
           } else {
             console.error(`Attempt ${attempt} failed for ${url}:`, lastError.message);
+            
+            // For API rate limit errors, wait longer
+            if (lastError.message.includes('429') || lastError.message.includes('quota')) {
+              console.log('Rate limit detected, waiting longer...');
+              await new Promise(resolve => setTimeout(resolve, 5000 * attempt));
+              continue;
+            }
           }
           
           if (attempt < maxRetries) {
-            // Wait before retry: 2s, 4s, etc.
-            const waitTime = attempt * 2000;
+            // Shorter wait time for faster recovery
+            const waitTime = 1000 * attempt; // 1s, 2s
             console.log(`Waiting ${waitTime}ms before retry...`);
             await new Promise(resolve => setTimeout(resolve, waitTime));
           }
@@ -212,6 +223,8 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
     }
 
     console.log('Successfully fetched PageSpeed data for:', url);
+    const totalTime = Date.now() - startTime;
+    console.log(`Function completed in ${totalTime}ms`);
 
     return {
       statusCode: 200,
@@ -223,14 +236,16 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
     };
 
   } catch (error) {
-    console.error('PageSpeed function error:', error);
+    const totalTime = Date.now() - startTime;
+    console.error(`PageSpeed function error after ${totalTime}ms:`, error);
     
     return {
       statusCode: 500,
       headers,
       body: JSON.stringify({ 
         error: 'Internal server error',
-        message: error instanceof Error ? error.message : 'Unknown error'
+        message: error instanceof Error ? error.message : 'Unknown error',
+        executionTime: `${totalTime}ms`
       })
     };
   }
