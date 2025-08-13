@@ -1,4 +1,4 @@
-import { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
+import type { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
 
 interface PageSpeedAPIResponse {
   captchaResult: string;
@@ -89,37 +89,81 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
 
     console.log('Calling PageSpeed Insights API for:', url, 'with strategy:', strategy);
 
-    // Call PageSpeed Insights API with enhanced timeout handling
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 120000); // 120초 타임아웃 (2분)
+    // Enhanced API call with retry logic
+    const makeRequestWithRetry = async (maxRetries = 2): Promise<Response> => {
+      let lastError: Error | null = null;
+      
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          console.log(`Attempt ${attempt}/${maxRetries} for ${url}`);
+          
+          const controller = new AbortController();
+          // Progressive timeout: 2min for first attempt, 3min for retries
+          const timeoutMs = attempt === 1 ? 120000 : 180000;
+          const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+          
+          console.log(`Starting analysis for ${url} - This may take up to ${timeoutMs/60000} minutes for complex sites...`);
+          
+          const response = await fetch(apiUrl.toString(), {
+            method: 'GET',
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (compatible; PageSpeed Analysis Tool)',
+              'Accept': 'application/json',
+              'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8'
+            },
+            signal: controller.signal
+          });
+          
+          clearTimeout(timeoutId);
+          console.log(`Analysis completed for ${url} with status:`, response.status);
+          
+          if (response.ok) {
+            return response; // Success - return immediately
+          }
+          
+          // If not ok, treat as error for retry logic
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          
+        } catch (fetchError) {
+          lastError = fetchError as Error;
+          
+          if (lastError.name === 'AbortError') {
+            console.error(`PageSpeed API timeout on attempt ${attempt} for URL:`, url);
+            
+            if (attempt === maxRetries) {
+              throw new Error(`분석 시간이 초과되었습니다 (${attempt === 1 ? '2분' : '3분'}). 복잡한 웹사이트는 분석하는 데 시간이 오래 걸릴 수 있습니다. 잠시 후 다시 시도하거나 더 간단한 페이지를 분석해보세요.`);
+            }
+          } else {
+            console.error(`Attempt ${attempt} failed for ${url}:`, lastError.message);
+          }
+          
+          if (attempt < maxRetries) {
+            // Wait before retry: 2s, 4s, etc.
+            const waitTime = attempt * 2000;
+            console.log(`Waiting ${waitTime}ms before retry...`);
+            await new Promise(resolve => setTimeout(resolve, waitTime));
+          }
+        }
+      }
+      
+      // All attempts failed
+      throw lastError || new Error('All retry attempts failed');
+    };
 
-    let response;
+    let response: Response;
     try {
-      console.log(`Starting analysis for ${url} - This may take up to 2 minutes for complex sites...`);
+      response = await makeRequestWithRetry();
+    } catch (error) {
+      console.error('All retry attempts failed for URL:', url, error);
       
-      response = await fetch(apiUrl.toString(), {
-        method: 'GET',
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (compatible; PageSpeed Analysis Tool)',
-          'Accept': 'application/json',
-          'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8'
-        },
-        signal: controller.signal
-      });
-      
-      clearTimeout(timeoutId);
-      console.log(`Analysis completed for ${url} with status:`, response.status);
-    } catch (fetchError) {
-      clearTimeout(timeoutId);
-      
-      if (fetchError instanceof Error && fetchError.name === 'AbortError') {
-        console.error('PageSpeed API timeout for URL:', url);
+      // Handle specific timeout errors with user-friendly messages
+      if (error instanceof Error && error.message.includes('분석 시간이 초과')) {
         return {
           statusCode: 504,
           headers,
           body: JSON.stringify({ 
-            error: '분석 시간이 초과되었습니다 (2분). 복잡한 웹사이트는 분석하는 데 시간이 오래 걸릴 수 있습니다. 잠시 후 다시 시도하거나 더 간단한 페이지를 분석해보세요.',
-            details: `Request timeout after 120 seconds for ${url}`,
+            error: error.message,
+            details: `Request timeout after multiple attempts for ${url}`,
             suggestions: [
               '페이지를 새로고침하고 다시 시도',
               '모바일 버전 페이지 사용 (예: m.example.com)',
@@ -130,8 +174,7 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
         };
       }
       
-      console.error('Fetch error for URL:', url, fetchError);
-      throw fetchError; // Re-throw other errors
+      throw error;
     }
 
     if (!response.ok) {
